@@ -8,7 +8,7 @@ namespace Mango.Web.Model
         public APIType APIType { get; set; } = APIType.GET;
         //for the url of the request from the api
         public string URL { get; set; }
-        public object Date { get; set; }
+        public object Data { get; set; }
         //fro authorization
         public string AccessToken { get; set; } 
     }
