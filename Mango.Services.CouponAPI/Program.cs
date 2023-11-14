@@ -1,5 +1,6 @@
 using Mango.Services.CouponAPI;
 using Mango.Services.CouponAPI.Data;
+using Mango.Services.CouponAPI.Modes.DTO;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,10 @@ builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
 //adding dbcontext to the services
 builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+//adding responsDTO to the services for the dependency injection
+builder.Services.AddScoped<ResponsDTO>();
 
 var app = builder.Build();
 
