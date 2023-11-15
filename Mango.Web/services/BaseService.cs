@@ -29,9 +29,9 @@ namespace Mango.Web.services
                 //token
 
                 message.RequestUri = new Uri(requestDTO.URL);
-                if (requestDTO.Date != null)
+                if (requestDTO.Data != null)
                 {
-                    message.Content = new StringContent(JsonConvert.SerializeObject(requestDTO.Date), Encoding.UTF8, "application/json");
+                    message.Content = new StringContent(JsonConvert.SerializeObject(requestDTO.Data), Encoding.UTF8, "application/json");
                 }
                 HttpResponseMessage apiResponse = null;
 
