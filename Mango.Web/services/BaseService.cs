@@ -33,6 +33,8 @@ namespace Mango.Web.services
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(requestDTO.Data), Encoding.UTF8, "application/json");
                 }
+                //the response from the api using HttpResponseMessage Cuz its the built in class for the http response and then
+                //we will use the responsDTO class to implement the response from httpresponsemessage
                 HttpResponseMessage apiResponse = null;
 
                 //switch case for the api type for the request

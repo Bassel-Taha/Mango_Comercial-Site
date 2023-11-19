@@ -10,8 +10,10 @@ namespace Mango.Web.services.Iservices
 
         public Task<ResponsDTO> UpdateCouponAsync( int id, CouponDTO couponDTO);
 
-        public Task<ResponsDTO> DeleteCouponAsync(int id);
+        public Task<ResponsDTO> DeleteCouponAsync(string coponCode);
 
         public Task<ResponsDTO> CreateCouponAsync(CouponDTO couponDTO);
+
+        public Task<ResponsDTO> GetCouponasync(int id);
     }
 }

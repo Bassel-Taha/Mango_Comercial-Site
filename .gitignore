@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Mango.Web/Models/RequestDTO.cs
+/Mango.Services.CouponAPI/Controllers/CouponController.cs

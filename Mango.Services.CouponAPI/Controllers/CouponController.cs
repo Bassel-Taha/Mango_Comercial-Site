@@ -5,6 +5,7 @@ using Mango.Services.CouponAPI.Modes.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
@@ -123,7 +124,7 @@ namespace Mango.Services.CouponAPI.Controllers
         // PUT: api/Coupon/UpdateCoupon/5
         [HttpPut]
         [Route("UpdateCoupon/{id}")]
-        public async Task<ResponsDTO> UpdateCoupon(int id, CouponDTO couponDTO)
+        public async Task<ResponsDTO> UpdateCoupon(int id, [FromBody] CouponDTO couponDTO)
         {
             try
             {
@@ -146,12 +147,12 @@ namespace Mango.Services.CouponAPI.Controllers
 
         //delete: api/Coupon/DeleteCoupon/5
         [HttpDelete]
-        [Route("DeleteCoupon/{id}")]
-        public async Task<ResponsDTO> DeleteCoupon(int id)
+        [Route("DeleteCoupon/{couponcode}")]
+        public async Task<ResponsDTO> DeleteCoupon(string couponcode)
         {
             try
             {
-                var coupon = await _dBContext.Coupons.FindAsync(id);
+                var coupon = await _dBContext.Coupons.FirstAsync(i => i.CouponCode == couponcode);
                 if (coupon == null)
                 {
                     _response.IsSuccess = false;

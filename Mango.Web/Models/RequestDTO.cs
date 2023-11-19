@@ -9,7 +9,7 @@ namespace Mango.Web.Model
         //for the url of the request from the api
         public string URL { get; set; }
         public object Data { get; set; }
-        //fro authorization
+        //fpr authorization
         public string AccessToken { get; set; } 
     }
 }
