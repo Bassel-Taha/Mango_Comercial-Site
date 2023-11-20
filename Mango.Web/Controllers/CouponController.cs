@@ -43,16 +43,27 @@ namespace Mango.Web.Controllers
         }
 
         //delete a coupon from the Db
-        public async Task<IActionResult> CouponDelete( string CouponCode)
+        public async Task<IActionResult> CouponDeleteView( string CouponCode)
         {
-            var coupon = await _couponService.GetCouponasync(CouponCode);
-            if (ModelState.IsValid)
+            var couponRespons = await _couponService.GetCouponasync(CouponCode);
+           
+            if (couponRespons.IsSuccess == true)
             {
-                await _couponService.DeleteCouponAsync(CouponCode);
-                
+                var coupon = JsonConvert.DeserializeObject<CouponDTO>(couponRespons.Result.ToString());
+                return View(coupon);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CouponDelete(CouponDTO Coupondto)
+        {
+            var response = await _couponService.DeleteCouponAsync(Coupondto.CouponCode);
+            if (response.IsSuccess == true)
+            {
                 return RedirectToAction(nameof(CouponIndex));
             }
-            return View(coupon);
+            return View(Coupondto);
         }
     }
 }
