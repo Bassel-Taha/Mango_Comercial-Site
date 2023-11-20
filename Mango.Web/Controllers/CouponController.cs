@@ -9,9 +9,11 @@ namespace Mango.Web.Controllers
     {
         private readonly ICouponService _couponService;
 
+
         public CouponController(ICouponService CouponService)
         {
             _couponService = CouponService;
+
         }
 
         //getallcoupons in the Db and display them
@@ -21,6 +23,7 @@ namespace Mango.Web.Controllers
            var SerializedResponseDto = await _couponService.GetAllCouponsAsync();
             if (SerializedResponseDto.IsSuccess == false)
             {
+                TempData["error"]=SerializedResponseDto.Message;
                 return NotFound();
             }
             var Coupons = JsonConvert.DeserializeObject<List<CouponDTO>>(SerializedResponseDto.Result.ToString());
@@ -35,6 +38,8 @@ namespace Mango.Web.Controllers
                 var SerializedResponseDto = await _couponService.CreateCouponAsync(newcoupon);
                 if (SerializedResponseDto.IsSuccess == false)
                 {
+                    TempData["error"] = SerializedResponseDto.Message;
+
                     return NotFound();
                 }
                 return RedirectToAction(nameof(CouponIndex));
@@ -52,6 +57,7 @@ namespace Mango.Web.Controllers
                 var coupon = JsonConvert.DeserializeObject<CouponDTO>(couponRespons.Result.ToString());
                 return View(coupon);
             }
+            TempData["error"] = couponRespons.Message;
             return NotFound();
         }
 
@@ -61,8 +67,10 @@ namespace Mango.Web.Controllers
             var response = await _couponService.DeleteCouponAsync(Coupondto.CouponCode);
             if (response.IsSuccess == true)
             {
+                TempData["success"] = "deletion succeeded";
                 return RedirectToAction(nameof(CouponIndex));
             }
+            TempData["error"] = response.Message;
             return View(Coupondto);
         }
     }
