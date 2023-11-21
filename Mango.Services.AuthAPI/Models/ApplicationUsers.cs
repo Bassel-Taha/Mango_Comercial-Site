@@ -6,5 +6,6 @@ namespace Mango.Services.AuthAPI.Models
     {
         public string Name { get; set; }
         public string Address { get; set; }
+        public int Number { get; set; }
     }
 }
