@@ -1,4 +1,5 @@
 ﻿using Mango.Services.AuthAPI.Models;
+using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

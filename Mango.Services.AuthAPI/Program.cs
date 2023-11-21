@@ -1,5 +1,6 @@
-using Mango.Services.AuthAPI.Models;
+using Mango.Services.AuthAPI;
 using Mango.Services.AuthAPI.Models.DTOs;
+using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
 using Mango.Services.CouponAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,9 @@ builder.Services.AddIdentity<ApplicationUsers, IdentityRole>()
 
 //configring the JWTConfig class so then we can use it in the controllers by injecting it
 builder.Services.Configure<JWTConfigration>(builder.Configuration.GetSection("ApiSettings:JWTOptions"));
+
+//ading automapper to the services
+builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
 var app = builder.Build();
 

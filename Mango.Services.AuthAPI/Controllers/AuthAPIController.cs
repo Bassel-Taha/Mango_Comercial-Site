@@ -1,4 +1,4 @@
-﻿using Mango.Services.AuthAPI.Models.DTOs;
+﻿using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
