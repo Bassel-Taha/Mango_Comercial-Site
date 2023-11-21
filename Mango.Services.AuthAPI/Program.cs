@@ -1,4 +1,5 @@
 using Mango.Services.AuthAPI.Models;
+using Mango.Services.AuthAPI.Models.DTOs;
 using Mango.Services.CouponAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
+
+
 //adding identityframework to the services and connecting it to the dbcontext usiing the entity framework stores
 //and adding the default token providers
 builder.Services.AddIdentity<ApplicationUsers, IdentityRole>()
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
+
+//configring the JWTConfig class so then we can use it in the controllers by injecting it
+builder.Services.Configure<JWTConfigration>(builder.Configuration.GetSection("ApiSettings:JWTOptions"));
 
 var app = builder.Build();
 
