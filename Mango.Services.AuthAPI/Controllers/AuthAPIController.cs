@@ -1,6 +1,11 @@
-﻿using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
+﻿using Mango.Services.AuthAPI.Models.DTOs;
+using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
+using Mango.Services.AuthAPI.Models.DTOs.UserDtos.Register;
+using Mango.Services.AuthAPI.Services;
+using Mango.Services.AuthAPI.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Logging;
 
 namespace Mango.Services.AuthAPI.Controllers
 {
@@ -8,11 +13,27 @@ namespace Mango.Services.AuthAPI.Controllers
     [ApiController]
     public class AuthAPIController : ControllerBase
     {
+        public IAuthService _Authservice { get; }
+
+        public AuthAPIController(IAuthService authservice) 
+        {
+            _Authservice = authservice;
+        }
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO registerrequest)
         {
-            return Ok();
+            
+            var response = await _Authservice.Regesterasync(registerrequest);
+            if (response.Result != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                response.IsSuccess = false;
+                return BadRequest(response);
+            }
         }
 
         [HttpPost]

@@ -1,15 +1,21 @@
 using Mango.Services.AuthAPI;
 using Mango.Services.AuthAPI.Models.DTOs;
 using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
+using Mango.Services.AuthAPI.Services;
+using Mango.Services.AuthAPI.Services.IServices;
 using Mango.Services.CouponAPI.Data;
+using Mango.Web.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ResponsDTO = Mango.Services.AuthAPI.Models.DTOs.ResponsDTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMvc();
 builder.Services.AddControllers();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -18,13 +24,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-
-
 //adding identityframework to the services and connecting it to the dbcontext usiing the entity framework stores
-//and adding the default token providers
+///and adding the default token providers
 builder.Services.AddIdentity<ApplicationUsers, IdentityRole>()
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
+
+
+//adding responseDTO to the services forn injection
+builder.Services.AddScoped<ResponsDTO>();
+
+//adding the Authservice and the IAuthservice to the services of the project 
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 //configring the JWTConfig class so then we can use it in the controllers by injecting it
 builder.Services.Configure<JWTConfigration>(builder.Configuration.GetSection("ApiSettings:JWTOptions"));

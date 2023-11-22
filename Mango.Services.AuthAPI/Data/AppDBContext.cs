@@ -3,6 +3,7 @@ using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Mango.Services.CouponAPI.Data
 {

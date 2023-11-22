@@ -7,6 +7,7 @@ using Mango.Services.AuthAPI.Services.IServices;
 using Mango.Services.CouponAPI.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using NuGet.Versioning;
 
 namespace Mango.Services.AuthAPI.Services
 {
@@ -16,15 +17,13 @@ namespace Mango.Services.AuthAPI.Services
         public UserManager<ApplicationUsers> _UserManager { get; }
         public RoleManager<IdentityRole> _SignInManager { get; }
         public IMapper _Mapper { get; }
-        public JWTConfigration _Configuration { get; }
         //injecting the identity core helper classes like the UserManager and roleManager
-        public AuthService(AppDBContext db, UserManager<ApplicationUsers> userManager, RoleManager<IdentityRole> signInManager, IMapper mapper, JWTConfigration configuration)
+        public AuthService(AppDBContext db, UserManager<ApplicationUsers> userManager, RoleManager<IdentityRole> signInManager, IMapper mapper)
         {
             _Db = db;
             _UserManager = userManager;
             _SignInManager = signInManager;
             _Mapper = mapper;
-            _Configuration = configuration;
         }
 
 
@@ -36,28 +35,34 @@ namespace Mango.Services.AuthAPI.Services
 
 
         //this method is used to register a new user
-        public async Task<RegistrationRequestDTO> Regesterasync(RegistrationRequestDTO registrationDto)
+        public async Task<ResponsDTO> Regesterasync(RegistrationRequestDTO registrationDto)
         {
             ApplicationUsers User = new();
             User.Email = registrationDto.Email;
             User.UserName = registrationDto.Email;
             User.Name = registrationDto.Name;
             User.PhoneNumber = registrationDto.PhoneNumber;
-
+            var respons = new ResponsDTO();
             try
             {
-                var result = await _UserManager.CreateAsync(User, registrationDto.Password);
-                if (result.Succeeded)
+                var identityresult = await _UserManager.CreateAsync(User, registrationDto.Password);
+                if (identityresult.Succeeded == true)
                 {
                     var userdto = _Mapper.Map<UserDTO>(User);
-                    return userdto;
+                    return respons;
+                }
+                else
+                {
+                    respons.IsSuccess = false;
+                    respons.Message = identityresult.Errors.FirstOrDefault().Description;
                 }
             }
             catch (Exception ex)
             {
-                
+                respons.IsSuccess = false;
+                respons.Message = ex.Message;
             }
-            return null;
+            return respons;
 
         }
 

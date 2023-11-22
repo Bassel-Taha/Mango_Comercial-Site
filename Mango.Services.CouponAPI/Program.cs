@@ -1,6 +1,9 @@
+using Mango.Services.AuthAPI.Services;
+using Mango.Services.AuthAPI.Services.IServices;
 using Mango.Services.CouponAPI;
 using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Modes.DTO;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,9 @@ builder.Services.AddAutoMapper(typeof(MapperConfigration));
 //adding dbcontext to the services
 builder.Services.AddDbContext<AppDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+//adding the IAuthservice and the Authservice to the services
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 //adding responsDTO to the services for the dependency injection
 builder.Services.AddScoped<ResponsDTO>();
