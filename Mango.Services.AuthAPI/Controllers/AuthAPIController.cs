@@ -1,5 +1,6 @@
 ﻿using Mango.Services.AuthAPI.Models.DTOs;
 using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
+using Mango.Services.AuthAPI.Models.DTOs.UserDtos.Login;
 using Mango.Services.AuthAPI.Models.DTOs.UserDtos.Register;
 using Mango.Services.AuthAPI.Services;
 using Mango.Services.AuthAPI.Services.IServices;
@@ -37,10 +38,23 @@ namespace Mango.Services.AuthAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Login/{UserName}")]
-        public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
-            return Ok();
+            
+            var loginresponse = await _Authservice.LoginAsync(loginRequestDTO);
+            var response = new ResponsDTO();
+            if (loginresponse.User == null)
+            {
+                response.IsSuccess = false;
+                response.Message = "Invalid Login";
+                return Unauthorized(response);
+            }
+            else
+            {
+                response.Result = loginresponse;
+                return Ok(response);
+            }
         }
 
     }

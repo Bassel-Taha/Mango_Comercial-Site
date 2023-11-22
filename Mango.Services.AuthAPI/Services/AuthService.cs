@@ -7,6 +7,7 @@ using Mango.Services.AuthAPI.Services.IServices;
 using Mango.Services.CouponAPI.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
 
 namespace Mango.Services.AuthAPI.Services
@@ -28,9 +29,25 @@ namespace Mango.Services.AuthAPI.Services
 
 
         //this method is used to login a user
-        public Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
+        public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
-            throw new NotImplementedException();
+            ResponsDTO respons = new();
+            var user = await _Db.Users.FirstOrDefaultAsync(x => x.UserName == loginRequestDTO.UserName);
+            var model = _UserManager.CheckPasswordAsync(user, loginRequestDTO.Password);
+            if (user == null || await model == false)
+            {
+                return new LoginResponseDTO { User = null , Token = "" };
+            }
+            else
+            {
+                var userDto = _Mapper.Map<UserDTO>(user);
+                return new LoginResponseDTO {
+                    User = userDto 
+
+                    //adding the token later 
+                    , Token ="" 
+                };
+            }
         }
 
 
