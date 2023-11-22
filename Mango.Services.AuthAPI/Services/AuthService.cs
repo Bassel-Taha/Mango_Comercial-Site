@@ -46,9 +46,10 @@ namespace Mango.Services.AuthAPI.Services
             try
             {
                 var identityresult = await _UserManager.CreateAsync(User, registrationDto.Password);
-                if (identityresult.Succeeded == true)
+                if (identityresult.Succeeded != false)
                 {
                     var userdto = _Mapper.Map<UserDTO>(User);
+                    respons.IsSuccess= true;
                     return respons;
                 }
                 else

@@ -25,7 +25,7 @@ namespace Mango.Services.AuthAPI.Controllers
         {
             
             var response = await _Authservice.Regesterasync(registerrequest);
-            if (response.Result != null)
+            if (response.IsSuccess == true)
             {
                 return Ok(response);
             }
