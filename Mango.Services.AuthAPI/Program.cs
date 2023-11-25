@@ -11,14 +11,13 @@ using ResponsDTO = Mango.Services.AuthAPI.Models.DTOs.ResponsDTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddMvc();
-builder.Services.AddControllers();
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add services to the container.
+builder.Services.AddMvc();
+builder.Services.AddControllers();
 
 //adding dbcontext to the services
 builder.Services.AddDbContext<AppDBContext>(options =>
@@ -34,6 +33,9 @@ builder.Services.AddIdentity<ApplicationUsers, IdentityRole>()
 //adding responseDTO to the services forn injection
 builder.Services.AddScoped<ResponsDTO>();
 
+//adding the JwtTokenGenerator and the IJwtTokenGenerator to the services of the project
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
 //adding the Authservice and the IAuthservice to the services of the project 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -44,6 +46,8 @@ builder.Services.Configure<JWTConfigration>(builder.Configuration.GetSection("Ap
 builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

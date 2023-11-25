@@ -57,5 +57,21 @@ namespace Mango.Services.AuthAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("assigningRoles")]
+        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDTO registrationRequest)
+        {
+            var respons = await _Authservice.AssignRools(registrationRequest);
+            if ( respons.Result != null )
+            {
+                return Ok(respons);
+            }
+            else
+            {
+                return BadRequest(respons);
+            }
+            
+        }
+
     }
 }

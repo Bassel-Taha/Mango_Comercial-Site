@@ -16,15 +16,19 @@ namespace Mango.Services.AuthAPI.Services
     {
         public AppDBContext _Db { get; }
         public UserManager<ApplicationUsers> _UserManager { get; }
-        public RoleManager<IdentityRole> _SignInManager { get; }
+        public RoleManager<IdentityRole> _Rolemanger { get; }
         public IMapper _Mapper { get; }
+        public IJwtTokenGenerator _JwtGenerator { get; }
+
+
         //injecting the identity core helper classes like the UserManager and roleManager
-        public AuthService(AppDBContext db, UserManager<ApplicationUsers> userManager, RoleManager<IdentityRole> signInManager, IMapper mapper)
+        public AuthService(AppDBContext db, UserManager<ApplicationUsers> userManager, RoleManager<IdentityRole> signInManager, IMapper mapper , IJwtTokenGenerator _jwtGenerator)
         {
             _Db = db;
             _UserManager = userManager;
-            _SignInManager = signInManager;
+            _Rolemanger = signInManager;
             _Mapper = mapper;
+            _JwtGenerator = _jwtGenerator;
         }
 
 
@@ -40,12 +44,13 @@ namespace Mango.Services.AuthAPI.Services
             }
             else
             {
+                var token = _JwtGenerator.GenerateToken(user);
                 var userDto = _Mapper.Map<UserDTO>(user);
                 return new LoginResponseDTO {
                     User = userDto 
 
                     //adding the token later 
-                    , Token ="" 
+                    , Token = token
                 };
             }
         }
@@ -66,6 +71,7 @@ namespace Mango.Services.AuthAPI.Services
                 if (identityresult.Succeeded != false)
                 {
                     var userdto = _Mapper.Map<UserDTO>(User);
+                    respons.Result = userdto;
                     respons.IsSuccess= true;
                     return respons;
                 }
@@ -84,6 +90,30 @@ namespace Mango.Services.AuthAPI.Services
 
         }
 
+        public async Task<ResponsDTO> AssignRools(RegistrationRequestDTO UserAssigned)
+        {
+            ResponsDTO respons = new();
+            var user = await _Db.Users.FirstOrDefaultAsync(x => x.Email == UserAssigned.Email);
+            if (user != null)
+            {
+                IdentityResult role = new();
+                if (!await _Rolemanger.RoleExistsAsync(UserAssigned.Role))
+                {
+                    role = await _Rolemanger.CreateAsync(new IdentityRole(UserAssigned.Role));
+                }
+                respons.Result =  await _UserManager.AddToRoleAsync(user, UserAssigned.Role);
+                
+                return respons;
+            }
+            else
+            {
+                respons.IsSuccess = false;
+                respons.Message = "User not found";
+                return respons;
+            }
+             
+
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using Mango.Services.AuthAPI.Models.DTOs;
 using Mango.Services.AuthAPI.Models.DTOs.UserDtos;
 using Mango.Services.AuthAPI.Services.IServices;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,10 +12,10 @@ namespace Mango.Services.AuthAPI.Services
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         public JWTConfigration _JwtConfig { get; }
-
-        public JwtTokenGenerator(JWTConfigration JwtConfig)
+        //when injecting the JWTConfigration it maust be configered as IOptions<JWTConfigration> and the property must take the Value
+        public JwtTokenGenerator(IOptions <JWTConfigration> JwtConfig)
         {
-            this._JwtConfig = JwtConfig;
+            this._JwtConfig = JwtConfig.Value;
         }
 
 

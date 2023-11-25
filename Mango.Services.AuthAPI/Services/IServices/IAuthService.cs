@@ -10,5 +10,7 @@ namespace Mango.Services.AuthAPI.Services.IServices
         public Task <ResponsDTO> Regesterasync(RegistrationRequestDTO registrationDto);
 
         public Task <LoginResponseDTO>LoginAsync(LoginRequestDTO loginRequestDTO);
+        
+        public Task <ResponsDTO> AssignRools(RegistrationRequestDTO UserAssigned);    
     }
 }

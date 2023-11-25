@@ -16,6 +16,8 @@ namespace Mango.Services.AuthAPI.Models.DTOs.UserDtos.Register
         public string Password { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public string Role { get; set; }
     }
 }
     
