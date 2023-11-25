@@ -1,11 +1,11 @@
-﻿namespace Mango.Services.AuthAPI.Models.DTOs
-{
-    public class JWTConfigration
+﻿    namespace Mango.Services.AuthAPI.Models.DTOs
     {
-        public string Secret { get; set; }
+        public class JWTConfigration
+        {
+            public string secret { get; set; }
 
-        public string Issuer { get; set; }
+            public string issuer { get; set; }
 
-        public string Audience { get; set; }
+            public string Audience { get; set; }
+        }
     }
-}
