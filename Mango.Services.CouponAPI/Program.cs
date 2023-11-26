@@ -18,12 +18,14 @@ builder.Services.AddSwaggerGen();
 //adding automapper to the services
 builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
+////adding the IAuthservice and the Authservice to the services
+//builder.Services.AddScoped<IAuthService, AuthService>();
+
 //adding dbcontext to the services
 builder.Services.AddDbContext<AppDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-//adding the IAuthservice and the Authservice to the services
-builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 //adding responsDTO to the services for the dependency injection
 builder.Services.AddScoped<ResponsDTO>();
