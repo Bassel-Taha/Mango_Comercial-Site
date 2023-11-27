@@ -9,6 +9,8 @@
         // selcet the role of tthe user
         public const string RoleAdmin = "Admin";
         public const string RoleUser = "User";
+        //the token cookies (KEY)  
+        public const string TockenCookie = "JwtToken";
         //the ApiType for the request
         public enum APIType
         {

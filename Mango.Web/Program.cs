@@ -25,6 +25,7 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITockenProvider, TockenProvider>();
 
 //populate CouponBaseURL in the SD class  with the values from the appsettings.json
 SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponService"];
