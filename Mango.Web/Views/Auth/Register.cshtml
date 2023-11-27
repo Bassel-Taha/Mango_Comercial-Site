@@ -1,60 +1,23 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        input {
-            margin: 8px 0;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-    </style>
-    <title>Registration Page</title>
-</head>
-<body>
-    <div class="container">
-        <h1>Registration</h1>
-        <form>
-            <input type="text" placeholder="Full Name" required>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <div class="row align-items-center">
-
-                <div class="row-cols-2 align-content-center">
-                    <input asp-controller="Auth" asp-action="Register" type="submit" value="Register" class="btn btn-success form-control" />
-                </div>
-                <div class="row-col-4 align-content-center">
-
-                    <a asp-controller="Home" asp-action="Index" class="btn-primary btn form-control ">Back to Home</a>
-                </div>
+﻿@model RegistrationRequestDTO
+<div>
+    <h1 class="align-content-center col-6">Registration</h1>
+    <form method="post"> 
+        <div>
+            <input asp-for="Name" type="text" class="form-control" placeholder="Name" required />
+            <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
+            <input asp-for="PhoneNumber" type="number" class="form-control" placeholder="Phone Number" >
+            <select asp-for="Role" class="form-select" asp-items="@ViewBag.Role" required>
+                    <option selected >--Select Role--</option>
+            </select>
+         </div>
+        <div class="row align-items-center">
+            <div class="row-cols-2 align-content-center">
+                <input asp-controller="Auth" asp-action="Login" type="submit" value="Login" class="btn btn-success form-control" />
             </div>
-
-        </form>
-    </div>
-</body>
-</html>
+            <div class="row-col-2 align-content-center">
+                <a asp-controller="Home" asp-action="Index"  class="btn-primary btn form-control ">Back to Home</a>
+            </div>
+        </div
+    </form>
+</div>

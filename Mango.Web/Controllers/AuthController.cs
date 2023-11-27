@@ -1,7 +1,9 @@
 ﻿using Mango.Web.Models;
 using Mango.Web.services.Iservices;
+using Mango.Web.utilities;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Mango.Web.Controllers
 {
@@ -35,6 +37,12 @@ namespace Mango.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Register(RegistrationRequestDTO registerRequest)
         {
+            var role = new List<SelectListItem>
+            {
+                new SelectListItem{Value = SD.RoleAdmin, Text = SD.RoleAdmin},
+                new SelectListItem{Value = SD.RoleUser, Text = SD.RoleUser}
+            };
+            ViewBag.Role = role;
             return View();
         }
 
