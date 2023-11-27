@@ -48,7 +48,6 @@ namespace Mango.Services.AuthAPI.Services
                 var userDto = _Mapper.Map<UserDTO>(user);
                 return new LoginResponseDTO {
                     User = userDto 
-
                     //adding the token later 
                     , Token = token
                 };
