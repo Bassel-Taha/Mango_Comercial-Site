@@ -12,18 +12,22 @@ namespace Mango.Web.Controllers
 {
     public class AuthController : Controller
     {
-        public IAuthService _AuthService { get; }
-
-        public AuthController(IAuthService AuthService)
+        private readonly IAuthService _AuthService;
+        private readonly ITockenProvider _TockenProvider;
+        public AuthController(IAuthService AuthService, ITockenProvider TockenProvider)
         {
             this._AuthService = AuthService;
+            this._TockenProvider = TockenProvider;
         }
 
+        //the get method to project the login view
         [HttpGet]
         public async Task<IActionResult> Login()
         {
             return View();
         }
+
+        //the post method of the login to perform the functionality of the login
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestDTO loginRequest)
         {
@@ -32,6 +36,8 @@ namespace Mango.Web.Controllers
             if (response.IsSuccess == true)
             {
                 var loginresponsedto = JsonConvert.DeserializeObject<LoginResponseDTO>(response.Result.ToString());
+                //setting the token in the cookie
+                _TockenProvider.SetToken(loginresponsedto.Token);
                 TempData["success"] = "Login Successful";
 
                 return RedirectToAction("Index", "Home");
@@ -43,14 +49,19 @@ namespace Mango.Web.Controllers
                 return View();
             }
         }
+
+        //the get method to project the register view
         [HttpGet]
         public async Task<IActionResult> Register()
         {
+            //the role of the user 
+            //showin it as a dropdown list for the consumer to select
             var role = new List<SelectListItem>
             {
                 new SelectListItem{Value = SD.RoleAdmin, Text = SD.RoleAdmin},
                 new SelectListItem{Value = SD.RoleUser, Text = SD.RoleUser}
             };
+            //the viewbag to hold the data from the controler to the view 
             ViewBag.Role = role;
             return View();
         }
@@ -78,6 +89,7 @@ namespace Mango.Web.Controllers
                     return RedirectToAction(nameof(Register));
                 }
             }
+            // has to add the role to the viewbag to be able to show it in the view again if the consumer registered wrong and got redirected to the register view again
             var role = new List<SelectListItem>
             {
                 new SelectListItem{Value = SD.RoleAdmin, Text = SD.RoleAdmin},

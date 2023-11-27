@@ -1,6 +1,7 @@
-﻿using Mango.Web.utilities;
+﻿using Mango.Web.services.Iservices;
+using Mango.Web.utilities;
 
-namespace Mango.Web.services.Iservices
+namespace Mango.Web.services
 {
     public class TockenProvider : ITockenProvider
     {
@@ -19,7 +20,7 @@ namespace Mango.Web.services.Iservices
         {
             string? token = null;
             //getting the token from the cookie if there is one if not return null
-            bool? hastoken = _accessot.HttpContext?.Request.Cookies.TryGetValue(SD.TockenCookie,out token);
+            bool? hastoken = _accessot.HttpContext?.Request.Cookies.TryGetValue(SD.TockenCookie, out token);
             // if there is a token return it if not return null
             return hastoken is true ? token : null;
         }
