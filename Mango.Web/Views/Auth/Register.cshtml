@@ -1,23 +1,23 @@
 ﻿@model RegistrationRequestDTO
 <div>
-    <h1 class="align-content-center col-6">Registration</h1>
+    <h1 class="offset-5">Registration</h1>
     <form method="post"> 
-        <div>
-            <input asp-for="Name" type="text" class="form-control" placeholder="Name" required />
+        <div class="text-center">
+            <input asp-for="Name"  type="text" class="form-control" placeholder="Name" required >
             <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
             <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
-            <input asp-for="PhoneNumber" type="number" class="form-control" placeholder="Phone Number" >
+            <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Phone Number" required >
             <select asp-for="Role" class="form-select" asp-items="@ViewBag.Role" required>
                     <option selected >--Select Role--</option>
             </select>
          </div>
         <div class="row align-items-center">
-            <div class="row-cols-2 align-content-center">
-                <input asp-controller="Auth" asp-action="Login" type="submit" value="Login" class="btn btn-success form-control" />
+            <div class="row-cols-2 align-content-center p-1">
+                <input asp-controller="Auth" asp-action="Register" type="submit" value="Register" class="btn btn-success form-control" />
             </div>
-            <div class="row-col-2 align-content-center">
+            <div class="row-col-2 align-content-center p-1">
                 <a asp-controller="Home" asp-action="Index"  class="btn-primary btn form-control ">Back to Home</a>
             </div>
-        </div
+        </div>
     </form>
 </div>

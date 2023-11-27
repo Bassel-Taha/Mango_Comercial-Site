@@ -8,9 +8,9 @@ namespace Mango.Web.services.Iservices
     {
         Task<ResponsDTO> Loginasync(LoginRequestDTO loginRequest);
 
-        Task<ResponsDTO> Registerasync(RegisterRequest registerRequest);
+        Task<ResponsDTO> Registerasync(RegistrationRequestDTO registerRequest);
 
-        Task <ResponsDTO> AssignRole (RegisterRequest registerRequest);
+        Task <ResponsDTO> AssignRole (RegistrationRequestDTO registerRequest);
 
     }
     

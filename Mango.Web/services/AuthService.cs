@@ -14,7 +14,7 @@ namespace Mango.Web.services
         {
             this._baseService = baseService;
         }
-        public async Task<ResponsDTO> AssignRole(RegisterRequest registerRequest)
+        public async Task<ResponsDTO> AssignRole(RegistrationRequestDTO registerRequest)
         {
             return await _baseService.SendAsync(new RequestDTO()
             {
@@ -34,7 +34,7 @@ namespace Mango.Web.services
             });
         }
 
-        public async Task<ResponsDTO> Registerasync(RegisterRequest registerRequest)
+        public async Task<ResponsDTO> Registerasync(RegistrationRequestDTO registerRequest)
         {
             return await _baseService.SendAsync(new RequestDTO()
             {

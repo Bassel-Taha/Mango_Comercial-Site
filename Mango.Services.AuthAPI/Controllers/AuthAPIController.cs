@@ -22,7 +22,7 @@ namespace Mango.Services.AuthAPI.Controllers
         }
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO registerrequest)
+        public async Task<IActionResult> Register( RegistrationRequestDTO registerrequest)
         {
             
             var response = await _Authservice.Regesterasync(registerrequest);
@@ -39,7 +39,7 @@ namespace Mango.Services.AuthAPI.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
+        public async Task<IActionResult> Login( LoginRequestDTO loginRequestDTO)
         {
             
             var loginresponse = await _Authservice.LoginAsync(loginRequestDTO);
@@ -59,7 +59,7 @@ namespace Mango.Services.AuthAPI.Controllers
 
         [HttpPost]
         [Route("assigningRoles")]
-        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDTO registrationRequest)
+        public async Task<IActionResult> AssignRole( RegistrationRequestDTO registrationRequest)
         {
             var respons = await _Authservice.AssignRools(registrationRequest);
             if ( respons.Result != null )
