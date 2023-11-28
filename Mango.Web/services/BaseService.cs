@@ -73,7 +73,7 @@ namespace Mango.Web.services
                     case HttpStatusCode.InternalServerError:
                         return new() { IsSuccess = false, Message = "Internal Server Error" };
                     case HttpStatusCode.BadRequest:
-                        return new() { IsSuccess = false, Message = "Bad Request" };
+                        return new() { IsSuccess = false, Message = apiResponse.ReasonPhrase };
 
                     default:
                         var apiContent = await apiResponse.Content.ReadAsStringAsync();

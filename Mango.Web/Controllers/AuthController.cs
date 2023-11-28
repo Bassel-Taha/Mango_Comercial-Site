@@ -93,6 +93,7 @@ namespace Mango.Web.Controllers
                 else
                 {
                     TempData["error"] = roleresponse.Message;
+
                     return RedirectToAction(nameof(Register));
                 }
             }
@@ -103,6 +104,7 @@ namespace Mango.Web.Controllers
                 new SelectListItem{Value = SD.RoleUser, Text = SD.RoleUser}
             };
             ViewBag.Role = role;
+            TempData["error"] = respons.Message;
             return View(obj);
         }
 

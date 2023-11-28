@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mango.Services.AuthAPI\Mango.Services.AuthAPI.csproj" />
+    <ProjectReference Include="..\Mango.Web\Mango.Web.csproj" />
   </ItemGroup>
 
 </Project>

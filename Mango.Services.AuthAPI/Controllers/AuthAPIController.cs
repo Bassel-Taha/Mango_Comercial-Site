@@ -22,18 +22,18 @@ namespace Mango.Services.AuthAPI.Controllers
         }
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register( RegistrationRequestDTO registerrequest)
+        public async Task<ResponsDTO> Register( RegistrationRequestDTO registerrequest)
         {
             
             var response = await _Authservice.Regesterasync(registerrequest);
             if (response.IsSuccess == true)
             {
-                return Ok(response);
+                return response;
             }
             else
             {
                 response.IsSuccess = false;
-                return BadRequest(response);
+                return (response);
             }
         }
 
