@@ -4,11 +4,14 @@
     <form method="post"> 
 
         <div>
-            <input asp-for="UserName" class="form-control" placeholder="Email" required>
+            
+            <input asp-for="UserName"  class="form-control" placeholder="Email" required >
+            <span asp-validation-for="UserName" class="text-danger"></span>
             <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
         <div class="row align-items-center">
             <div class="row-cols-2 align-content-center">
-                <input asp-controller="Auth" asp-action="Login" type="submit" value="Login" class="btn btn-success form-control" />
+                <input asp-controller="Auth" asp-action="Login" type="submit" value="Login" class="btn btn-success form-control"/>
             </div>
             <div class="row-col-2 align-content-center">
                 <a asp-controller="Home" asp-action="Index"  class="btn-primary btn form-control ">Back to Home</a>
@@ -16,3 +19,7 @@
         </div
     </form>
 </div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial "></partial>
+}

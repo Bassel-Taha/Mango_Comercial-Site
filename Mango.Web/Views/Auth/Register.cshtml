@@ -4,9 +4,13 @@
     <form method="post"> 
         <div class="text-center">
             <input asp-for="Name"  type="text" class="form-control" placeholder="Name" required >
+            <span asp-validation-for="Name" calss="text-danger"></span>
             <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
             <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
             <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Phone Number" required >
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             <select asp-for="Role" class="form-select" asp-items="@ViewBag.Role" required>
                     <option selected >--Select Role--</option>
             </select>
@@ -21,3 +25,7 @@
         </div>
     </form>
 </div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial "></partial>
+}

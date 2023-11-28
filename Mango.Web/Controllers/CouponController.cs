@@ -24,9 +24,15 @@ namespace Mango.Web.Controllers
             if (SerializedResponseDto.IsSuccess == false)
             {
                 TempData["error"]=SerializedResponseDto.Message;
-                return NotFound();
+                return View();
             }
-            var Coupons = JsonConvert.DeserializeObject<List<CouponDTO>>(SerializedResponseDto.Result.ToString());
+            List<CouponDTO> Coupons = new ();
+              Coupons = JsonConvert.DeserializeObject<List<CouponDTO>>(SerializedResponseDto.Result.ToString());
+            if(Coupons.Count==0)
+            {
+                TempData["error"] = JsonConvert.DeserializeObject<List<CouponDTO>>(SerializedResponseDto.Message.ToString());
+                return View();
+            }
             return View(Coupons);
         }
 
@@ -40,7 +46,7 @@ namespace Mango.Web.Controllers
                 {
                     TempData["error"] = SerializedResponseDto.Message;
 
-                    return NotFound();
+                    return View();
                 }
                 return RedirectToAction(nameof(CouponIndex));
             }
@@ -58,7 +64,7 @@ namespace Mango.Web.Controllers
                 return View(coupon);
             }
             TempData["error"] = couponRespons.Message;
-            return NotFound();
+            return View();
         }
 
         [HttpPost]
