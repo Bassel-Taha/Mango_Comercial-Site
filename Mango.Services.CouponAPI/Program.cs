@@ -3,7 +3,11 @@ using Mango.Services.CouponAPI;
 using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Modes.DTO;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Configuration;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +21,48 @@ builder.Services.AddSwaggerGen();
 //adding automapper to the services
 builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
-////adding the IAuthservice and the Authservice to the services
-//builder.Services.AddScoped<IAuthService, AuthService>();
+#region the 3 thing we validate the token with
+// the key was encoded using the ascii encoding
+var key = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("ApiSettings:secret")); 
+var issuer = builder.Configuration.GetValue<string>("ApiSettings:issuer");
+var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
+#endregion
+
+//adding the Authentication to the services
+builder.Services.AddAuthentication(x=> 
+{ //have to install the nuget package Microsoft.AspNetCore.Authentication.JwtBearer
+  x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = true,
+            ValidAudience = audience,
+            RequireExpirationTime = true,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+//ading authorization to the services
+builder.Services.AddAuthorization(/*options =>
+{
+    options.AddPolicy("readpolicy", builder =>
+    {
+        builder.RequireRole("Admin", "Customer", "Moderator");
+    });
+    options.AddPolicy("writepolicy", builder =>
+    {
+        builder.RequireRole("Admin", "Moderator");
+    });
+}*/);
+
 
 //adding dbcontext to the services
 builder.Services.AddDbContext<AppDBContext>(options =>
@@ -40,6 +84,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
