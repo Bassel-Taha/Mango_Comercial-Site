@@ -63,12 +63,18 @@ namespace Mango.Services.AuthAPI.Services
             User.UserName = registrationDto.Email;
             User.Name = registrationDto.Name;
             User.PhoneNumber = registrationDto.PhoneNumber;
+            User.Role = registrationDto.Role;
             var respons = new ResponsDTO();
             try
             {
                 var identityresult = await _UserManager.CreateAsync(User, registrationDto.Password);
                 if (identityresult.Succeeded != false)
                 {
+                    var Rolerespons = await AssignRools(registrationDto);
+                    if(Rolerespons.IsSuccess = false)
+                    {
+                        return Rolerespons;
+                    }
                     var userdto = _Mapper.Map<UserDTO>(User);
                     respons.Result = userdto;
                     respons.IsSuccess= true;

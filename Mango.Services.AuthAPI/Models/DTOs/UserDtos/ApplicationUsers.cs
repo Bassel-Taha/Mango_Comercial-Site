@@ -5,5 +5,6 @@ namespace Mango.Services.AuthAPI.Models.DTOs.UserDtos
     public class ApplicationUsers : IdentityUser
     {
         public string Name { get; set; }
+        public string? Role { get; set; }
     }
 }

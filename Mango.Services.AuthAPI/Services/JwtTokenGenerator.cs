@@ -27,7 +27,8 @@ namespace Mango.Services.AuthAPI.Services
             {
                 new Claim(JwtRegisteredClaimNames.Name,appuser.UserName),
                 new Claim(JwtRegisteredClaimNames.Email,appuser.Email),
-                new Claim(JwtRegisteredClaimNames.Sub,appuser.Id)
+                new Claim(JwtRegisteredClaimNames.Sub,appuser.Id),
+                new Claim(ClaimTypes.Role, appuser.Role)
             };
             var tokenDescriptor = new SecurityTokenDescriptor
             {
