@@ -2,10 +2,15 @@
 using Mango.Web.Models;
 using Mango.Web.services.Iservices;
 using Mango.Web.utilities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Diagnostics.Eventing.Reader;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 namespace Mango.Web.Controllers
@@ -38,6 +43,8 @@ namespace Mango.Web.Controllers
                 var loginresponsedto = JsonConvert.DeserializeObject<LoginResponseDTO>(response.Result.ToString());
                 //setting the token in the cookie
                 _TockenProvider.SetToken(loginresponsedto.Token);
+                //calling the signin method to let the app know that the user is logedin and authinticated
+                await SignInUser(loginresponsedto);
                 TempData["success"] = "Login Successful";
 
                 return RedirectToAction("Index", "Home");
@@ -104,6 +111,29 @@ namespace Mango.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             return View();
+        }
+
+
+        //creatin the signin method to be used in the login method
+        //so the app can know when the user is logedin and authinticated
+        private async Task SignInUser(LoginResponseDTO loginresponsedto)
+        {
+            //usign nugget package identitymodel.tooken.jwt to get the custom claim types and the readtoken method 
+            var handler = new JwtSecurityTokenHandler();
+            //reading the token to get the content of it specificly the claims to be used to create the claimidentity variable for the claimprincipal
+            var jwt = handler.ReadJwtToken(loginresponsedto.Token);
+            //creating hte claimidentity variable to be used in the claimprincipal
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            //adding the claims to the claimidentity variable
+            identity .AddClaim(new Claim (JwtRegisteredClaimNames.Email, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value)); 
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            //this claim is built in in the identity framwork and it must be added and assigned for the singin method tp work
+            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
 }
