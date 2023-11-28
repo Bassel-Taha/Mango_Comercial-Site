@@ -120,19 +120,24 @@ namespace Mango.Web.Controllers
         {
             //usign nugget package identitymodel.tooken.jwt to get the custom claim types and the readtoken method 
             var handler = new JwtSecurityTokenHandler();
+
             //reading the token to get the content of it specificly the claims to be used to create the claimidentity variable for the claimprincipal
             var jwt = handler.ReadJwtToken(loginresponsedto.Token);
+
             //creating hte claimidentity variable to be used in the claimprincipal
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+
             //adding the claims to the claimidentity variable
             identity .AddClaim(new Claim (JwtRegisteredClaimNames.Email, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value)); 
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+
             //this claim is built in in the identity framwork and it must be added and assigned for the singin method tp work
             identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
 
+            //calling the builtin signin method to let the app know that the user is logedin and authinticated
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
