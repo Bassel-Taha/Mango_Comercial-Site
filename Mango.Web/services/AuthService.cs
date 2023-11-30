@@ -41,7 +41,7 @@ namespace Mango.Web.services
                 APIType = SD.APIType.POST,
                 Data = registerRequest,
                 URL = SD.AuthAPIBase + "/Register"
-            });
+            }, false);
         }
     }
 }
