@@ -20,7 +20,7 @@ namespace Mango.Services.CouponAPI.Controllers
         private readonly IMapper _mapper;
         private readonly ResponsDTO _response;
 
-        public CouponController(AppDBContext dBContext , IMapper mapper , ResponsDTO response)
+        public CouponController(AppDBContext dBContext, IMapper mapper, ResponsDTO response)
         {
             this._dBContext = dBContext;
             this._mapper = mapper;
@@ -31,19 +31,19 @@ namespace Mango.Services.CouponAPI.Controllers
         [Route("GetAll")]
         public async Task<ResponsDTO> GetCoupons()
         {
-            try 
+            try
             {
                 var coupons = await _dBContext.Coupons.ToListAsync();
                 _response.Result = coupons;
-            return _response; 
+                return _response;
             }
             catch
             {
                 _response.IsSuccess = false;
-                _response.Message ="Error retrieving data from database";
+                _response.Message = "Error retrieving data from database";
                 return _response;
             }
-            
+
         }
 
         // GET: api/Coupon/5
@@ -70,7 +70,7 @@ namespace Mango.Services.CouponAPI.Controllers
                 _response.Message = "Error retrieving data from database";
                 return _response;
             }
-            
+
         }
 
         // GET: api/Coupon/CouponCode?Code=10%25off
@@ -80,7 +80,7 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {
-                var coupon = await _dBContext.Coupons.FirstOrDefaultAsync(u=> u.CouponCode==Code);
+                var coupon = await _dBContext.Coupons.FirstOrDefaultAsync(u => u.CouponCode == Code);
                 if (coupon == null)
                 {
                     _response.IsSuccess = false;
@@ -102,18 +102,19 @@ namespace Mango.Services.CouponAPI.Controllers
         // POST: api/Coupon/NewCoupon
         [HttpPost]
         [Route("NewCoupon")]
+        [Authorize(Roles = "Admin")]
         public async Task<ResponsDTO> CreateCoupon([FromBody] CouponDTO couponDTO)
         {
             try
             {
-               
+
                 var coupon = _mapper.Map<Coupon>(couponDTO);
                 await _dBContext.Coupons.AddAsync(coupon);
                 await _dBContext.SaveChangesAsync();
                 _response.Result = couponDTO;
                 _response.Message = $"{couponDTO.CouponCode} was added to the DB";
                 return _response;
-                
+
             }
             catch
             {
@@ -121,12 +122,13 @@ namespace Mango.Services.CouponAPI.Controllers
                 _response.Message = "Error retrieving data from database";
                 return _response;
             }
-            
+
         }
 
         // PUT: api/Coupon/UpdateCoupon/5
         [HttpPut]
         [Route("UpdateCoupon/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ResponsDTO> UpdateCoupon(int id, [FromBody] CouponDTO couponDTO)
         {
             try
@@ -145,12 +147,13 @@ namespace Mango.Services.CouponAPI.Controllers
                 _response.Message = "Error retrieving data from database";
                 return _response;
             }
-            
+
         }
 
         //delete: api/Coupon/DeleteCoupon/5
         [HttpDelete]
         [Route("DeleteCoupon/{couponcode}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ResponsDTO> DeleteCoupon(string couponcode)
         {
             try
