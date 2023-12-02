@@ -1,3 +1,4 @@
+using Mango.Services.ProductAPI;
 using Mango.Services.ProductsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #region adding the services to the container
+
+builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); ;
