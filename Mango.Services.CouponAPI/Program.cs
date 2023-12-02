@@ -69,8 +69,7 @@ builder.Services.AddAuthentication(x=>
 { //have to install the nuget package Microsoft.AspNetCore.Authentication.JwtBearer
   x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
+}).AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
