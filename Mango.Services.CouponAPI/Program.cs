@@ -52,8 +52,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 #endregion
 
-
-
 //adding automapper to the services
 builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
