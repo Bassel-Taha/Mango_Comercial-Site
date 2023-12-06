@@ -2,6 +2,7 @@
 using Mango.Services.ProductAPI.Model;
 using Mango.Services.ProductAPI.Model.DTO;
 using Mango.Services.ProductsAPI.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Mango.Services.ProductAPI.Controllers
 {
     [Route("api/ProductsAPI")]
     [ApiController]
+    [Authorize]
     public class ProductsAPIController : ControllerBase
     {
         private readonly AppDBContext _dB;
@@ -104,6 +106,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Route("CreateProduct")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductsDto productDTO)
         {
             try
@@ -130,7 +133,8 @@ namespace Mango.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateProduct/{Name}")]
+        [Route("UpdateProduct/{Name}")]\
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(string Name, [FromBody] ProductsDto productDTO)
         {
             try
@@ -159,6 +163,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteProduct/{Name}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(string Name)
         {
             try
