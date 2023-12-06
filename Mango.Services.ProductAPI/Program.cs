@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 #region authentication and authorization to swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "Mango.Services.CouponAPI", Version = "v1" });
+    c.SwaggerDoc("v1", new() { Title = "Mango.Services.ProductAPI", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. 
