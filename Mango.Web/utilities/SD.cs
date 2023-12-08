@@ -6,6 +6,8 @@
         public static string? CouponAPIBase { get; set; }  
         //the base url for the AuthAPI
         public static string? AuthAPIBase { get; set; }
+        //the base Url for the ProductAPI
+        public static string? ProductAPIBase { get; set; }
         // selcet the role of tthe user
         public const string RoleAdmin = "Admin";
         public const string RoleUser = "User";
