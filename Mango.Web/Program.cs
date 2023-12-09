@@ -51,7 +51,7 @@ builder.Services.AddScoped<IProductsService, ProductsService>();
 //populate CouponBaseURL in the SD class  with the values from the appsettings.json
 SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponService"];
 SD.AuthAPIBase = builder.Configuration["ServiceUrls:AuthService"];
-SD.AuthAPIBase = builder.Configuration["ServiceUrls:ProductsService"];
+SD.ProductAPIBase = builder.Configuration["ServiceUrls:ProductsService"];
 
 #endregion
 

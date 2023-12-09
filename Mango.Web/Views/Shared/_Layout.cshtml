@@ -16,7 +16,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark     box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand"  asp-area="" asp-page="/Index">MANGO LOVERS</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">MANGO LOVERS</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <a class="navbar-brand" asp-area="" asp-page="/Index">Mango.Web</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -26,10 +26,10 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link " asp-controller="Home" asp-action="Index" >Home</a>
+                                <a class="nav-link " asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " asp-controller="Home" asp-action="Privacy" >Privacy</a>
+                                <a class="nav-link " asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
                             </li>
                             <li class="nav-item dropdown">
@@ -38,6 +38,8 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" asp-controller="Coupon" asp-action="CouponIndex"> Coupons </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Products" asp-action="ProductsIndex"> Products </a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 </ul>
                             </li>
@@ -61,7 +63,7 @@
                                 </li>
                             }
                         </ul>
-                       
+
                     </div>
             </div>
         </nav>
