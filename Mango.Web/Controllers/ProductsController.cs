@@ -28,11 +28,11 @@ namespace Mango.Web.Controllers
             return View(list);
         }
 
-        public async Task<IActionResult> ProductsDelete(ProductsDto newproduct)
+        public async Task<IActionResult> ProductsDelete(string productsName)
         {
 			if (ModelState.IsValid)
             {
-				var response = await _productsService.DeleteProductAsync(newproduct.Name);
+				var response = await _productsService.GetProductByIdAsync(newproduct.Name);
 				if (response != null && response.IsSuccess)
                 {
 					return RedirectToAction(nameof(ProductsIndex));
@@ -46,7 +46,5 @@ namespace Mango.Web.Controllers
 			return View(newproduct);
 		}
 
-		
-		
-    }
+	}
 }
