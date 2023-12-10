@@ -124,7 +124,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 await _dB.Products.AddAsync(product);
                 await _dB.SaveChangesAsync();
                 responsDTO.Result = _mapper.Map<ProductsDto>(product);
-                return CreatedAtAction(nameof(CreateProduct),responsDTO.Result);
+                return Ok(responsDTO);
             }
             catch (Exception)
             {
@@ -153,7 +153,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 //must use the mapper to map the productDTO to product for the same variable meaning not creating anew one with the mapping but editing the existing one
                 _dB.Products.Update(_mapper.Map(productDTO,product));
                 await _dB.SaveChangesAsync();
-                return NoContent();
+                return Ok();
             }
             catch (Exception)
             {
@@ -178,7 +178,12 @@ namespace Mango.Services.ProductAPI.Controllers
                 }
                 _dB.Products.Remove(product);
                 await _dB.SaveChangesAsync();
-                return NoContent();
+                responsDTO = new ResponsDTO()
+                {
+                    IsSuccess = true,
+                    Message = "Product Deleted Successfully"
+                };
+                return Ok(responsDTO);
             }
             catch (Exception)
             {

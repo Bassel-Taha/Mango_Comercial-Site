@@ -44,13 +44,57 @@ namespace Mango.Web.Controllers
         public async Task<IActionResult> ProductsDelete(string Name)
         {
 			var response = await _productsService.DeleteProductAsync(Name);
-			if (response != null && response.IsSuccess)
+			if ( response.IsSuccess)
             {
 				return RedirectToAction(nameof(ProductsIndex));
 			}
             TempData["error"] = response.Message;
 			return RedirectToAction(nameof(ProductsDeleteView));
 		}
+
+        public async Task <IActionResult> ProductsUpdateView (string ProductName)
+        {
+            var product = await _productsService.GetProductByNameAsync(ProductName);
+            if (product != null && product.IsSuccess)
+            {
+				return View(JsonConvert.DeserializeObject<ProductsDto>(Convert.ToString( product.Result)));
+			}
+
+            TempData["error"] = product.Message;
+            return RedirectToAction(nameof(ProductsIndex));
+        }
+
+        public async Task<IActionResult> ProductsUpdate(ProductsDto Product)
+        {
+			var response = await _productsService.UpdateProductAsync(Product);
+			if (response == null)
+            {
+                TempData["success"] = "Product Updated Successfully";
+                return RedirectToAction(nameof(ProductsIndex));
+            }
+
+            TempData["error"] = response.Message;
+            return RedirectToAction(nameof(ProductsIndex));
+        }
+
+        public async Task<IActionResult> ProductsCreateView()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> ProductsCreate(ProductsDto Product)
+        {
+            var response = await _productsService.CreateProductAsync(Product);
+            if ( response.IsSuccess)
+            {
+                TempData["success"] = "Product Created Successfully";
+                return RedirectToAction(nameof(ProductsIndex));
+            }
+
+            TempData["error"] = response.Message;
+            return RedirectToAction(nameof(ProductsCreateView));
+
+        }
 
 	}
 }
