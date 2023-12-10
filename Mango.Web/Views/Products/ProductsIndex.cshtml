@@ -48,10 +48,10 @@
 								@item.Price.ToString("c")
 							</td>
 							<td>
-								<a class="btn btn-success">
-									<i class="bi bi-pencil-square"></i>
+								<a asp-action="" asp-route-Name="@item.Name" class="btn btn-success">
+									<i  class="bi bi-pencil-square"></i>
 								</a>
-								<a class="btn btn-danger">
+								<a asp-action="ProductsDeleteView" asp-route-Name="@item.Name" class="btn btn-danger">
 									<i class="bi bi-trash"></i>
 								</a>
 							</td>

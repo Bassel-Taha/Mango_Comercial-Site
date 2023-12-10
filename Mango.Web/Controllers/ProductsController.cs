@@ -28,22 +28,28 @@ namespace Mango.Web.Controllers
             return View(list);
         }
 
-        public async Task<IActionResult> ProductsDelete(string productsName)
+        public async Task<IActionResult> ProductsDeleteView(string Name)
         {
-			if (ModelState.IsValid)
-            {
-				var response = await _productsService.GetProductByIdAsync(newproduct.Name);
+			
+				var response = await _productsService.GetProductByNameAsync(Name);
 				if (response != null && response.IsSuccess)
                 {
-					return RedirectToAction(nameof(ProductsIndex));
+					return View(JsonConvert.DeserializeObject<ProductsDto>(Convert.ToString(response.Result)));
 				}
-				else
-                {
+				
                     TempData["error"] = response.Message;
 					return View();
-				}
+		}
+
+        public async Task<IActionResult> ProductsDelete(string Name)
+        {
+			var response = await _productsService.DeleteProductAsync(Name);
+			if (response != null && response.IsSuccess)
+            {
+				return RedirectToAction(nameof(ProductsIndex));
 			}
-			return View(newproduct);
+            TempData["error"] = response.Message;
+			return RedirectToAction(nameof(ProductsDeleteView));
 		}
 
 	}

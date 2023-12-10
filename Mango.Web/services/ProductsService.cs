@@ -54,7 +54,17 @@ namespace Mango.Web.services
             });
         }
 
-        public async Task<ResponsDTO> UpdateProductAsync(ProductsDto productDTO)
+		public Task<ResponsDTO> GetProductByNameAsync(string name)
+		{
+            return _baseservice.SendAsync(new RequestDTO()
+            {
+				APIType = SD.APIType.GET,
+				Data = name,
+				URL = SD.ProductAPIBase + $"GetProductByName/{name}"
+			});
+		}
+
+		public async Task<ResponsDTO> UpdateProductAsync(ProductsDto productDTO)
         {
             return await _baseservice.SendAsync(new RequestDTO()
             {
