@@ -1,0 +1,57 @@
+﻿
+@model ProductsDto?
+
+
+<style>
+    html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+    }
+ 
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 15px;
+        display: flex;
+    }
+    .left-column {
+        width: 65%;
+        position: relative;
+    }
+ 
+    .right-column {
+        width: 35%;
+        margin-top: 60px;
+    }
+</style>
+<main class="container">
+
+    <!-- Left Column / Headphones Image -->
+    <div class="left-column">
+        <img src="@Model.ImageUrl">
+
+    </div>
+
+
+    <!-- Right Column -->
+    <div class="right-column">
+
+        <!-- Product Description -->
+        <div class="product-description">
+            <span>@Model.CategoryName</span>
+            <h1>@Model.Name</h1>
+            <p>@Model.Description</p>
+        </div>
+
+        <!-- Product Configuration -->
+@*         <div class="product-configuration"></div> *@
+        </div>
+
+        <!-- Product Pricing -->
+        <div class="product-price">
+            <span> @Model.Price</span>
+            <a href="#" class="cart-btn">Add to cart</a>
+        </div>
+</main>

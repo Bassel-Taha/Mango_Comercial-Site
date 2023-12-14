@@ -50,5 +50,23 @@ namespace Mango.Web.Controllers
 	        return View(list);
         }
 
+
+        public async Task<IActionResult> Details(int ProductID)
+        {
+            ProductsDto model = new();
+            var response = await _productsService.GetProductByIdAsync(ProductID);
+            if (response != null && response.IsSuccess)
+            {
+                model = JsonConvert.DeserializeObject<ProductsDto>(Convert.ToString(response.Result));
+                return View(model);
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+                return View();
+            }
+            
+        }
+
 	}
 }
