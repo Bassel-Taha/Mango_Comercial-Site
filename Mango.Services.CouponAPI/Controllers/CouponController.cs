@@ -175,7 +175,9 @@ namespace Mango.Services.CouponAPI.Controllers
             {
                 _response.IsSuccess = false;
                 _response.Message = "Error retrieving data from database";
-                return _response;            }
+                return _response;
+
+            }
         }
     }
 }

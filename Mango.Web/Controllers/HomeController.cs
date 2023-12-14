@@ -4,19 +4,24 @@ using System.Diagnostics;
 
 namespace Mango.Web.Controllers
 {
-    public class HomeController : Controller
+	using System.Diagnostics.CodeAnalysis;
+
+	using Mango.Web.services.Iservices;
+
+	using Newtonsoft.Json;
+
+	public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IProductsService _productsService;
+
+        public HomeController(ILogger<HomeController> logger , IProductsService productsService)
         {
-            _logger = logger;
+	        _logger = logger;
+	        this._productsService = productsService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         public IActionResult Privacy()
         {
@@ -28,5 +33,22 @@ namespace Mango.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-    }
+
+        public async Task<IActionResult> Index()
+        {
+	        List<ProductsDto> list = new();
+	        var response = await _productsService.GetAllProductsAsync();
+	        if (response != null && response.IsSuccess)
+	        {
+		        list = JsonConvert.DeserializeObject<List<ProductsDto>>(Convert.ToString(response.Result));
+	        }
+	        else
+	        {
+		        TempData["error"] = response.Message;
+		        return View();
+	        }
+	        return View(list);
+        }
+
+	}
 }

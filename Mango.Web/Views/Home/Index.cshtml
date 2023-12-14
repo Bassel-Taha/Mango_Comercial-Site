@@ -1,13 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using Mango.Web.Model
+@model List<ProductsDto>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Hello👋</h1>
     <br></br>
     <p>
-        Hello, I am Bassel Taha a <b>.Net Developer </b> An Engineer Graduated From <a href="https://uom.lk/"> <b>Port Said University</b>, Egypt, Port-Said </a>. <br>
-        <b>a passionate self-learner</b> <img src="https://raw.githubusercontent.com/TheDudeThatCode/TheDudeThatCode/master/Assets/Developer.gif" width="30px"> and a <b>Back-End Developer</b>&nbsp;<img src="https://raw.githubusercontent.com/TheDudeThatCode/TheDudeThatCode/master/Assets/Designer.gif" width="36px">&nbsp,<br>who is <b>passionate</b>
+        Hi, I am Bassel Taha a <b>.Net Developer </b> An Engineer Graduated From <a href="https://uom.lk/"> <b>Port Said University</b>, Egypt, Port-Said </a>. <br>
+        <b>I'm a passionate self-learner</b> <img src="https://raw.githubusercontent.com/TheDudeThatCode/TheDudeThatCode/master/Assets/Developer.gif" width="30px"> and a <b>Back-End Developer</b>&nbsp;<img src="https://raw.githubusercontent.com/TheDudeThatCode/TheDudeThatCode/master/Assets/Designer.gif" width="36px">&nbsp,<br>who is <b>passionate</b>
         with <b>Programming</b> and  <b>eager</b> to Hone my technical skills and work experience by working on dynamic projects and collaborative team settings
     </p>
+
+    <form>
+        @if (Model != null)
+        {
+            <div class="container row">
+                @foreach (var response in Model)
+                {
+                    <div class=" col-4 ">
+                        <div class="p-0 my-3 border rounded">
+                            <div class="card">
+                                <h3 class="card-title text-white-50 text-center py-2">@response.Name</h3>
+                                <img src="@response.ImageUrl" class="card-img-top">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between py-2">
+                                        <span class="text-danger" style="font-size: 20px;">@response.Price $</span>
+                                        <span class="badge bg-warning text-white p-2">@response.CategoryName</span>
+                                    </div>
+                                    <p class="card-text">@response.Description</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <a class="btn btn-success form-control">Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </form>
 </div>
