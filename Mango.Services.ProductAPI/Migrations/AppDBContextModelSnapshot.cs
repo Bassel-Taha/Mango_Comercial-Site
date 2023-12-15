@@ -55,8 +55,8 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 1,
                             CategoryName = "Appetizer",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
-                            ImageUrl = "https://th.bing.com/th/id/R.4e7f53fcc6f1412363c9aa683dd1426c?rik=1KrgIdIJqrLnhQ&pid=ImgRaw&r=0&sres=1&sresct=1",
-                            Name = "Sambosa",
+                            ImageUrl = "https://placehold.co/603x403",
+                            Name = "Samosa",
                             Price = 15.0
                         },
                         new
@@ -64,7 +64,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 2,
                             CategoryName = "Appetizer",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
-                            ImageUrl = "https://th.bing.com/th/id/R.2d6497c8af8a41b39d52391c605141dc?rik=PZXUnfSWfAhYUg&pid=ImgRaw&r=0",
+                            ImageUrl = "https://placehold.co/602x402",
                             Name = "Paneer Tikka",
                             Price = 13.99
                         },
@@ -73,7 +73,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 3,
                             CategoryName = "Dessert",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
-                            ImageUrl = "https://th.bing.com/th/id/OIP.U2VOKNY3f8Os9ISq6PoG8gHaHU?w=628&h=621&rs=1&pid=ImgDetMain",
+                            ImageUrl = "https://placehold.co/601x401",
                             Name = "Sweet Pie",
                             Price = 10.99
                         },
@@ -82,18 +82,9 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 4,
                             CategoryName = "Entree",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
-                            ImageUrl = "https://th.bing.com/th/id/R.7d1656d63d1f2cd751cd8cb145cbbcc2?rik=L2PKxpb9MrlXzQ&pid=ImgRaw&r=0",
+                            ImageUrl = "https://placehold.co/600x400",
                             Name = "Pav Bhaji",
                             Price = 15.0
-                        },
-                        new
-                        {
-                            ProductId = 5,
-                            CategoryName = "Main Dish",
-                            Description = "Roast Duck has tender and juicy meat, crispy skin, and it's glazed with the honey-balsamic glaze to give the duck a beautiful roasted look.",
-                            ImageUrl = "https://s3.amazonaws.com/grazecart/groveladderfarmllc/images/1566559006_5d5fcb1e8100e.jpg",
-                            Name = "Roasted Duck",
-                            Price = 20.0
                         });
                 });
 #pragma warning restore 612, 618
