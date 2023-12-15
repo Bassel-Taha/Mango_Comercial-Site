@@ -1,5 +1,4 @@
-﻿
-@model ProductsDto?
+﻿@model ProductsDto?
 
 
 <style>
@@ -9,21 +8,38 @@
         margin: 0;
         font-family: 'Roboto', sans-serif;
     }
- 
+
     .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 15px;
         display: flex;
     }
+
     .left-column {
         width: 65%;
         position: relative;
+        background-blend-mode: normal;
+        align-content: center;
+        height:100%;
     }
- 
+
+        .left-column img {
+            height: 750px;
+            width: 991px;
+            display: block;/* This ensures that any extra space below the image is removed */
+            margin: auto;  /* Centers the image within the column */
+            align-content: center
+        }
+
     .right-column {
         width: 35%;
         margin-top: 60px;
+        position: relative;
+        text-align: center;
+        background-color: #272b30;
+        border: #377385;
+        height: 100%;
     }
 </style>
 <main class="container">
@@ -36,22 +52,28 @@
 
 
     <!-- Right Column -->
-    <div class="right-column">
+    <div class=" right-column border rounded my-5" style="height: 100%">
 
-        <!-- Product Description -->
-        <div class="product-description">
-            <span>@Model.CategoryName</span>
-            <h1>@Model.Name</h1>
-            <p>@Model.Description</p>
+        <div style="height: 100%">
+            <!-- Product Description -->
+            <div class="product-description" style="justify-content: center; align-items: center;">
+                <span class="badge bg-warning text-white p-2">@Model.CategoryName</span>
+                <h1 style="justify-content: center">@Model.Name</h1>
+                <p>@Model.Description</p>
+            </div>
+
+            <!-- Product Configuration -->
+            @*         <div class="product-configuration"></div> *@
+
+            <!-- Product Pricing -->
+            <div class="product-price">
+                <span class="text-danger justify-content-center align-content-center"> @Model.Price $</span>
+                <br></br>
+                <a class="btn btn-success">Add to cart</a>
+            </div>
         </div>
 
-        <!-- Product Configuration -->
-@*         <div class="product-configuration"></div> *@
-        </div>
+    </div>
 
-        <!-- Product Pricing -->
-        <div class="product-price">
-            <span> @Model.Price</span>
-            <a href="#" class="cart-btn">Add to cart</a>
-        </div>
+
 </main>
