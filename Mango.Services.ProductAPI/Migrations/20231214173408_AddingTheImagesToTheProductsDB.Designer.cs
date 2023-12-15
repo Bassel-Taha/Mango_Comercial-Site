@@ -3,6 +3,7 @@ using Mango.Services.ProductsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mango.Services.ProductAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231214173408_AddingTheImagesToTheProductsDB")]
+    partial class AddingTheImagesToTheProductsDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 5,
                             CategoryName = "Main Dish",
                             Description = "Roast Duck has tender and juicy meat, crispy skin, and it's glazed with the honey-balsamic glaze to give the duck a beautiful roasted look.",
-                            ImageUrl = "https://s3.amazonaws.com/grazecart/groveladderfarmllc/images/1566559006_5d5fcb1e8100e.jpg",
+                            ImageUrl = "https://th.bing.com/th/id/OIP.Qbkxc5tV-o4BXXgu05QThgHaEL?rs=1&pid=ImgDetMain",
                             Name = "Roasted Duck",
                             Price = 20.0
                         });

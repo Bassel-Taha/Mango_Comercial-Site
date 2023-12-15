@@ -61,7 +61,7 @@ namespace Mango.Services.ProductsAPI.Data
                 Name = "Roasted Duck",
                 Price = 20.00,
                 Description = "Roast Duck has tender and juicy meat, crispy skin, and it's glazed with the honey-balsamic glaze to give the duck a beautiful roasted look.",
-                ImageUrl = "https://th.bing.com/th/id/OIP.Qbkxc5tV-o4BXXgu05QThgHaEL?rs=1&pid=ImgDetMain",
+                ImageUrl = "https://s3.amazonaws.com/grazecart/groveladderfarmllc/images/1566559006_5d5fcb1e8100e.jpg",
                 CategoryName = "Main Dish"
             });
         }
