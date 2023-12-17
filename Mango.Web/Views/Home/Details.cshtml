@@ -67,8 +67,10 @@
             <!-- Product Pricing -->
             <div class="product-price">
                 <span class="text-danger justify-content-center align-content-center"> @Model.Price.ToString("C")</span>
-                <br></br>
-                <a class="btn btn-success">Add to cart</a>
+                <br/>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary m-1">Back to Home</a>
+                <a class="btn btn-success m-1">Add to cart</a>
+
             </div>
         </div>
 
