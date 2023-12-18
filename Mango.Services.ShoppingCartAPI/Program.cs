@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 //adding the services for the api 
 #region adding the DB context service
 builder.Services.AddDbContext<ShoppinCartDB_Context>(options =>
-       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+       options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 #endregion
 
 #region automapper service
