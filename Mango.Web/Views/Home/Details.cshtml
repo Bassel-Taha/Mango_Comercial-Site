@@ -51,9 +51,9 @@
 
 
     <!-- Right Column -->
-    <div class=" right-column border rounded my-5" style="height: 100%">
+    <div class=" right-column " style="height: 100%;">
 
-        <div style="height: 100%">
+        <div style="height: 100%; padding: 5px; border: 5px double whitesmoke; border-radius: 3px "  >
             <!-- Product Description -->
             <div class="product-description" style="justify-content: center; align-items: center;">
                 <span class="badge bg-warning text-white p-2">@Model.CategoryName</span>
@@ -67,8 +67,10 @@
             <!-- Product Pricing -->
             <div class="product-price">
                 <span class="text-danger justify-content-center align-content-center"> @Model.Price.ToString("C")</span>
-                <br></br>
-                <a class="btn btn-success">Add to cart</a>
+                <br/>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary m-1">Back to Home</a>
+                <a class="btn btn-success m-1">Add to cart</a>
+
             </div>
         </div>
 
