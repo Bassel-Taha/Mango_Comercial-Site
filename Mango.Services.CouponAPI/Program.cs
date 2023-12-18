@@ -84,17 +84,7 @@ builder.Services.AddAuthentication(x=>
     });
 
 //ading authorization to the services
-builder.Services.AddAuthorization(/*options =>
-{
-    options.AddPolicy("readpolicy", builder =>
-    {
-        builder.RequireRole("Admin", "Customer", "Moderator");
-    });
-    options.AddPolicy("writepolicy", builder =>
-    {
-        builder.RequireRole("Admin", "Moderator");
-    });
-}*/);
+builder.Services.AddAuthorization();
 
 
 //adding dbcontext to the services

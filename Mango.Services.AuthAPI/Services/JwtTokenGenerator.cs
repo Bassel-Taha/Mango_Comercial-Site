@@ -35,7 +35,7 @@ namespace Mango.Services.AuthAPI.Services
                 Audience = _JwtConfig.Audience,
                 Issuer = _JwtConfig.issuer,
                 Subject = new ClaimsIdentity(claimlist),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
