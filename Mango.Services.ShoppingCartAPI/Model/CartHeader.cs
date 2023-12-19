@@ -12,8 +12,6 @@
 
         public string? CouponCode { get; set; }
 
-        public string? ProductID { get; set; }
-
         [NotMapped]
         public double Discound { get; set; }
         [NotMapped]

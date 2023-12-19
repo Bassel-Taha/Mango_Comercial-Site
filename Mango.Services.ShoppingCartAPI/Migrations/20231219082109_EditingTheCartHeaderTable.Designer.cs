@@ -3,6 +3,7 @@ using Mango.Services.ShoppingCartAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mango.Services.ShoppingCartAPI.Migrations
 {
     [DbContext(typeof(ShoppinCartDB_Context))]
-    partial class ShoppinCartDB_ContextModelSnapshot : ModelSnapshot
+    [Migration("20231219082109_EditingTheCartHeaderTable")]
+    partial class EditingTheCartHeaderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
