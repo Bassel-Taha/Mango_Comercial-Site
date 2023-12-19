@@ -10,8 +10,6 @@ namespace Mango.Services.ShoppingCartAPI.Model.DTO
 
         public string? CouponID { get; set; }
 
-        public string? ProductID { get; set; }
-
         public double Discound { get; set; }
 
         public double CartTotal { get; set; }
