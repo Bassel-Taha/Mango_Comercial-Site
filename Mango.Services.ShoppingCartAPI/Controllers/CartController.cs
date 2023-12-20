@@ -26,7 +26,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
         private readonly ShoppinCartDB_Context _context;
 
-        public CartController(IMapper mapper, ShoppinCartDB_Context context )
+        public CartController(IMapper mapper, ShoppinCartDB_Context context)
         {
             this._mapper = mapper;
             this._context = context;
@@ -38,17 +38,17 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                
+
                 var response = new ResponsDTO();
                 var allcartheaders = await this._context.CartHeaders.ToListAsync();
                 var allcartdetails = await _context.CartDetails.ToListAsync();
                 var allcartorders = new List<CartDto>();
-                
+
                 foreach (var cartheader in allcartheaders)
                 {
                     var cartorder = new CartDto();
                     cartorder.CartHeader = this._mapper.Map<CartHeaderDto>(cartheader);
-                    var temp = _mapper.Map<List<CartDetailsDto>>(allcartdetails.Where(i =>i.CartHeaderID == cartheader.CartHeaderID));
+                    var temp = _mapper.Map<List<CartDetailsDto>>(allcartdetails.Where(i => i.CartHeaderID == cartheader.CartHeaderID));
                     cartorder.CartDetails = temp;
                     allcartorders.Add(cartorder);
                 }
@@ -69,6 +69,41 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+        [HttpGet]
+        [Route("GetCart/{Userid}")]
+
+        public async Task<ResponsDTO> GetCartByUserId(string Userid)
+        {
+            var response = new ResponsDTO();
+            try
+            {
+                var cart = new CartDto()
+                {
+                    CartHeader =  this._mapper.Map<CartHeaderDto>(await this._context.CartHeaders.FirstOrDefaultAsync(u => u.UserID == Userid)),
+                };
+                cart.CartDetails = this._mapper.Map<List<CartDetailsDto>>(
+                    this._context.CartDetails.Where(x => x.CartHeaderID == cart.CartHeader.CartHeaderID).ToList());
+
+                //adding the sum of the products prices in the total of the cartheader
+                var total = new double();
+                total = 0;
+                foreach (var cartdetail in cart.CartDetails)
+                {
+                    total = +(cartdetail.Count * cartdetail.Product.Price);
+                }
+                cart.CartHeader.CartTotal = total;
+
+                response.Result = cart;
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message.ToString();
+                response.IsSuccess = false;
+                return response;
+            }
+        }
+
 
         [HttpPost]
         [Route("AddingOrUppdatingCartDetail")]
@@ -78,7 +113,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             try
             {
                 var cartHeaderInTheDB = await _context.CartHeaders.AsNoTracking().FirstOrDefaultAsync(x => x.UserID == cartorder.CartHeader.UserID);
-                
+
                 //if the cartheader dosnt exist then adding a new cartheader 
                 if (cartHeaderInTheDB == null)
                 {
@@ -121,7 +156,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     else
                     {
                         cartorder.CartDetails.First().CartHeaderID = cartHeaderInTheDB.CartHeaderID;
-                         _context.CartDetails.AddAsync(this._mapper.Map<CartDetails>(cartorder.CartDetails.First()));
+                        _context.CartDetails.AddAsync(this._mapper.Map<CartDetails>(cartorder.CartDetails.First()));
                         await this._context.SaveChangesAsync();
                         response.Message = "the cart details is added to the carthead for the cartorder";
                         response.Result = cartorder;
@@ -132,12 +167,12 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message );
+                return BadRequest(e.Message);
             }
         }
 
         [HttpDelete]
-        [Route("DeletingCartOrder{ID}")]
+        [Route("DeletingCartOrder/{ID}")]
         public async Task<IActionResult> DeletingCartOrder(int ID)
         {
             try
@@ -155,12 +190,12 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 {
                     response.IsSuccess = false;
                     response.Message = "the order cant be found";
-                    return this.BadRequest(response) ;
+                    return this.BadRequest(response);
                 }
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError ,  e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
