@@ -8,8 +8,11 @@ using System.Text;
 
 using Mango.Services.ShoppingCartAPI;
 using Mango.Services.ShoppingCartAPI.Data;
+using Mango.Services.ShoppingCartAPI.Services;
+using Mango.Services.ShoppingCartAPI.Services.IServices;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +57,16 @@ builder.Services.AddSwaggerGen(c =>
 #endregion
 
 //adding the services for the api 
+
+#region adding the http client for the products api
+
+builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddHttpClient("Products",
+    x=> x.BaseAddress= new Uri(builder.Configuration["ProductsBaseUrl"])
+    );
+
+#endregion
+
 #region adding the DB context service
 builder.Services.AddDbContext<ShoppinCartDB_Context>(options =>
        options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
