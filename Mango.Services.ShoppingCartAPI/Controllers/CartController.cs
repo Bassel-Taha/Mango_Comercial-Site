@@ -11,6 +11,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
     using Mango.Services.ShoppingCartAPI.Data;
     using Mango.Services.ShoppingCartAPI.Model;
     using Mango.Services.ShoppingCartAPI.Model.DTO;
+    using Mango.Services.ShoppingCartAPI.Services.IServices;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -26,12 +27,15 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
         private readonly ShoppinCartDB_Context _context;
 
-        public CartController(IMapper mapper, ShoppinCartDB_Context context)
+        private readonly IProductsService _productservice;
+
+        public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice)
         {
             this._mapper = mapper;
             this._context = context;
+            this._productservice = productservice;
         }
-
+        //getting all the cart orders
         [HttpGet]
         [Route("GetAllCartOrders")]
         public async Task<IActionResult> GetAllCartOrders()
@@ -43,12 +47,21 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 var allcartheaders = await this._context.CartHeaders.ToListAsync();
                 var allcartdetails = await _context.CartDetails.ToListAsync();
                 var allcartorders = new List<CartDto>();
-
+                var allproducts =  await this._productservice.GetProductsFromAPIasync();
+                double total = 0;
                 foreach (var cartheader in allcartheaders)
                 {
                     var cartorder = new CartDto();
                     cartorder.CartHeader = this._mapper.Map<CartHeaderDto>(cartheader);
                     var temp = _mapper.Map<List<CartDetailsDto>>(allcartdetails.Where(i => i.CartHeaderID == cartheader.CartHeaderID));
+                    foreach (var cartDetailsDto in temp)
+                    {
+                        cartDetailsDto.Product =
+                            allproducts.FirstOrDefault(u => u.ProductId == cartDetailsDto.ProductID);
+                        total = +(cartDetailsDto.Product.Price * cartDetailsDto.Count);
+
+                    }
+                    cartorder.CartHeader.CartTotal = total;
                     cartorder.CartDetails = temp;
                     allcartorders.Add(cartorder);
                 }
@@ -69,22 +82,27 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+
+        // getting the cartorder by the userid
         [HttpGet]
         [Route("GetCart/{Userid}")]
-
         public async Task<ResponsDTO> GetCartByUserId(string Userid)
         {
             var response = new ResponsDTO();
             try
             {
+                var allproducts = await this._productservice.GetProductsFromAPIasync();
                 var cart = new CartDto()
                 {
                     CartHeader =  this._mapper.Map<CartHeaderDto>(await this._context.CartHeaders.FirstOrDefaultAsync(u => u.UserID == Userid)),
                 };
                 cart.CartDetails = this._mapper.Map<List<CartDetailsDto>>(
                     this._context.CartDetails.Where(x => x.CartHeaderID == cart.CartHeader.CartHeaderID).ToList());
-
-                //adding the sum of the products prices in the total of the cartheader
+                foreach (var cartCartDetail in cart.CartDetails)
+                {
+                    cartCartDetail.Product= allproducts.FirstOrDefault(x => x.ProductId == cartCartDetail.ProductID);
+                }
+                // adding the sum of the products prices in the total of the cartheader
                 var total = new double();
                 total = 0;
                 foreach (var cartdetail in cart.CartDetails)
@@ -104,7 +122,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
         }
 
-
+        // creating or updating a cartorder
         [HttpPost]
         [Route("AddingOrUppdatingCartDetail")]
         public async Task<IActionResult> AddingNewOrUpdatingCart([FromBody] CartDto cartorder)
@@ -114,14 +132,14 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             {
                 var cartHeaderInTheDB = await _context.CartHeaders.AsNoTracking().FirstOrDefaultAsync(x => x.UserID == cartorder.CartHeader.UserID);
 
-                //if the cartheader dosnt exist then adding a new cartheader 
+                // if the cartheader dosnt exist then adding a new cartheader 
                 if (cartHeaderInTheDB == null)
                 {
                     var cartheader = this._mapper.Map<CartHeader>(cartorder.CartHeader);
                     var newcartheader = await _context.CartHeaders.AddAsync(cartheader);
                     await this._context.SaveChangesAsync();
 
-                    //then adding the details to the cartheader and adding the cartdetails to the database
+                    // then adding the details to the cartheader and adding the cartdetails to the database
                     cartorder.CartDetails.First().CartHeaderID = cartheader.CartHeaderID;
                     _context.CartDetails.AddAsync(this._mapper.Map<CartDetails>(cartorder.CartDetails.First()));
                     _context.SaveChangesAsync();
@@ -131,14 +149,14 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     return Ok(response);
                 }
 
-                //checking if the the products in the cartdetails has the same product as the ones in the cartorder or not 
+                // checking if the the products in the cartdetails has the same product as the ones in the cartorder or not 
                 else
                 {
                     var detailsInTheCartOrder = await this._context.CartDetails.FirstOrDefaultAsync(
                                                     x => x.ProductID == cartorder.CartDetails.First().ProductID
                                                          && x.CartHeaderID == cartHeaderInTheDB.CartHeaderID);
 
-                    //if the details with the same product then update it
+                    // if the details with the same product then update it
                     if (detailsInTheCartOrder != null)
                     {
                         var Updatedcartorder = this._mapper.Map<CartDetails>(detailsInTheCartOrder);
@@ -152,7 +170,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                         return Ok(response);
                     }
 
-                    //if the deatils dont exist with the same product id then creaete anew details for the cart order
+                    // if the deatils dont exist with the same product id then creaete anew details for the cart order
                     else
                     {
                         cartorder.CartDetails.First().CartHeaderID = cartHeaderInTheDB.CartHeaderID;
@@ -171,6 +189,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
         }
 
+        // deleteing the whole cartorder
         [HttpDelete]
         [Route("DeletingCartOrder/{ID}")]
         public async Task<IActionResult> DeletingCartOrder(int ID)
