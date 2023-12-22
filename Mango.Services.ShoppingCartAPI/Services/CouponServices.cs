@@ -1,6 +1,7 @@
 ﻿namespace Mango.Services.ShoppingCartAPI.Services
 {
     using System.Configuration;
+    using Azure;
     using Mango.Services.ShoppingCartAPI.Model.DTO;
     using Mango.Services.ShoppingCartAPI.Services.IServices;
     using Newtonsoft.Json;
@@ -28,6 +29,13 @@
                 var baseUrl = SD.CouponApi;
                 httpmessage.RequestUri = new Uri($"{baseUrl}/api/Coupon/GetAll");
                 var messageresponse = await client.SendAsync(httpmessage);
+                if (messageresponse.IsSuccessStatusCode == false)
+                {
+                    var reponse =  new ResponsDTO();
+                    reponse.IsSuccess = false;
+                    reponse.Message = messageresponse.ReasonPhrase;
+                    return reponse;
+                }
                 var serializedApiResponse = await messageresponse.Content.ReadAsStringAsync();
                 var apiResponse = JsonConvert.DeserializeObject<ResponsDTO>(serializedApiResponse);
 

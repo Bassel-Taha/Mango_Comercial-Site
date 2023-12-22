@@ -8,7 +8,7 @@ namespace Mango.Services.ShoppingCartAPI.Model.DTO
 
         public string? UserID { get; set; }
 
-        public string? CouponID { get; set; }
+        public string? CouponCode { get; set; }
 
         public double Discound { get; set; }
 
