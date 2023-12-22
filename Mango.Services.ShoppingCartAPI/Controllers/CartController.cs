@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.ShoppingCartAPI.Controllers
 {
-    using System.Net;
-    using System.Runtime.CompilerServices;
-
     using AutoMapper;
 
     using Mango.Services.ShoppingCartAPI.Data;
@@ -14,35 +11,43 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
     using Mango.Services.ShoppingCartAPI.Services.IServices;
 
     using Microsoft.EntityFrameworkCore;
+    using NuGet.Common;
 
-    using NuGet.Packaging;
-
-    using ResponsDTO = Mango.Services.ShoppingCartAPI.Model.DTO.ResponsDTO;
 
     [Route("api/CartAPI")]
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly IMapper _mapper;
+             private readonly IMapper _mapper;
 
-        private readonly ShoppinCartDB_Context _context;
+             private readonly ShoppinCartDB_Context _context;
 
-        private readonly IProductsService _productservice;
+             private readonly IProductsService _productservice;
 
-        public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice)
+             private readonly ICouponService _couponService;
+
+             public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice, ICouponService couponService)
         {
             this._mapper = mapper;
             this._context = context;
             this._productservice = productservice;
+            this._couponService = couponService;
         }
+
+
         //getting all the cart orders
-        [HttpGet]
+        [HttpPost]
         [Route("GetAllCartOrders")]
-        public async Task<IActionResult> GetAllCartOrders()
+        public async Task<IActionResult> GetAllCartOrders([FromBody] string token)
         {
             try
             {
-
+                var respons = await this._couponService.GetAllCoupons(token);
+                if (respons.IsSuccess == false)
+                {
+                    return BadRequest(respons);
+                }
+                var coupons = (List<Coupon>)respons.Result;
                 var response = new ResponsDTO();
                 var allcartheaders = await this._context.CartHeaders.ToListAsync();
                 var allcartdetails = await _context.CartDetails.ToListAsync();
@@ -53,16 +58,23 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 {
                     var cartorder = new CartDto();
                     cartorder.CartHeader = this._mapper.Map<CartHeaderDto>(cartheader);
-                    var temp = _mapper.Map<List<CartDetailsDto>>(allcartdetails.Where(i => i.CartHeaderID == cartheader.CartHeaderID));
-                    foreach (var cartDetailsDto in temp)
+                    var cartDetailsForCartHeader = _mapper.Map<List<CartDetailsDto>>(allcartdetails.Where(i => i.CartHeaderID == cartheader.CartHeaderID));
+                    foreach (var cartDetailsDto in cartDetailsForCartHeader)
                     {
                         cartDetailsDto.Product =
                             allproducts.FirstOrDefault(u => u.ProductId == cartDetailsDto.ProductID);
-                        total = +(cartDetailsDto.Product.Price * cartDetailsDto.Count);
+                        total =+(cartDetailsDto.Product.Price * cartDetailsDto.Count);
+
+                        //subtracting the discount if there is a couponCode and the total more than the minimumAmout
+                        var coupon = coupons.FirstOrDefault(c => c.CouponCode == cartheader.CouponCode);
+                        if (coupon!=null && total < coupon.MinAmount)
+                        {
+                            total-= coupon.DiscountAmount;
+                        }
 
                     }
                     cartorder.CartHeader.CartTotal = total;
-                    cartorder.CartDetails = temp;
+                    cartorder.CartDetails = cartDetailsForCartHeader;
                     allcartorders.Add(cartorder);
                 }
                 if (allcartorders.Count != 0)
@@ -83,6 +95,8 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
         }
 
+
+        ////////////need refacturing to calculate the totals after adding the coupon code /////////////
         // getting the cartorder by the userid
         [HttpGet]
         [Route("GetCart/{Userid}")]
@@ -116,6 +130,69 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
             catch (Exception e)
             {
+                response.Message = e.Message.ToString();
+                response.IsSuccess = false;
+                return response;
+            }
+        }
+
+
+        //applying the coupon to the cartorder and saving it to the database
+        [HttpPost]
+        [Route("ApplyingCouponToCart")]
+        public async Task<ResponsDTO> ApplyingCoupon([FromBody]CartDto cartorder)
+        {
+            try
+            {
+                var response = new ResponsDTO();
+                var cartheader =
+                    await this._context.CartHeaders.FirstOrDefaultAsync(x => x.UserID == cartorder.CartHeader.UserID);
+                if (cartheader != null)
+                {
+                    cartheader.CouponCode = cartorder.CartHeader.CouponCode;
+                    this._context.Update(cartheader);
+                    await this._context.SaveChangesAsync();
+                    response.Result = this._mapper.Map<CartHeaderDto>(cartheader);
+                    return response;
+                }
+                response.Message = "the CartHeader couldnt be found ";
+                response.IsSuccess = false;
+                return response;
+            }
+            catch (Exception e)
+            {
+                var response = new ResponsDTO();
+                response.Message = e.Message.ToString();
+                response.IsSuccess = false;
+                return response;
+            }
+        }
+
+        //deletting the coupon to the cartorder and saving it to the database
+        [HttpPost]
+        [Route("DelettingCouponToCart")]
+        public async Task<ResponsDTO> DelettingCoupon([FromBody] CartDto cartorder)
+        {
+            try
+            {
+                var response = new ResponsDTO();
+                var cartheader =
+                    await this._context.CartHeaders.FirstOrDefaultAsync(x => x.UserID == cartorder.CartHeader.UserID);
+                if (cartheader != null)
+                {
+                    cartheader.CouponCode = null;
+                    this._context.Update(cartheader);
+                    await this._context.SaveChangesAsync();
+                    response.Result = this._mapper.Map<CartHeaderDto>(cartheader);
+                    return response;
+                }
+                response.Message = "the CartHeader couldnt be found ";
+                response.IsSuccess = false;
+                return response;
+            }
+            catch (Exception e)
+            {
+                var response = new ResponsDTO();
                 response.Message = e.Message.ToString();
                 response.IsSuccess = false;
                 return response;
@@ -188,6 +265,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+
 
         // deleteing the whole cartorder
         [HttpDelete]
