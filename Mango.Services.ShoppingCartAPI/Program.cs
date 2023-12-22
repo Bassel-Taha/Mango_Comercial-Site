@@ -24,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 #region authentication and authorization to swagger
 builder.Services.AddSwaggerGen(c =>
     {
+        //c.CustomSchemaIds(type => type.FullName);
         c.SwaggerDoc("v1", new() { Title = "Mango.Services.ShoppingCart", Version = "v1" });
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                                               {
@@ -60,10 +61,15 @@ builder.Services.AddSwaggerGen(c =>
 
 #region adding the http client for the products api
 
+SD.CouponApi = builder.Configuration["CouponsBaseUrl"];
+
 builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<ICouponService, CouponServices>();
 builder.Services.AddHttpClient("Products",
-    x=> x.BaseAddress= new Uri(builder.Configuration["ProductsBaseUrl"])
+    x=> x.BaseAddress = new Uri(builder.Configuration["ProductsBaseUrl"])
     );
+builder.Services.AddHttpClient("Coupons",
+    x => x.BaseAddress = new Uri(builder.Configuration["CouponsBaseUrl"]));
 
 #endregion
 
