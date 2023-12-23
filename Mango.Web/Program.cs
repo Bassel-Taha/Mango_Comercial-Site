@@ -46,12 +46,14 @@ builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITockenProvider, TockenProvider>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<IShoppingCartServicce, ShoppingCartService>();
 
 
 //populate CouponBaseURL in the SD class  with the values from the appsettings.json
 SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponService"];
 SD.AuthAPIBase = builder.Configuration["ServiceUrls:AuthService"];
 SD.ProductAPIBase = builder.Configuration["ServiceUrls:ProductsService"];
+SD.ShoppingCartBase = builder.Configuration["ServiceUrls:ShoppingCartService"];
 
 #endregion
 
