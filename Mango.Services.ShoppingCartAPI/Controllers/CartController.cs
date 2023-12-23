@@ -18,21 +18,23 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-             private readonly IMapper _mapper;
+        #region the props of the controller
+        private readonly IMapper _mapper;
 
-             private readonly ShoppinCartDB_Context _context;
+        private readonly ShoppinCartDB_Context _context;
 
-             private readonly IProductsService _productservice;
+        private readonly IProductsService _productservice;
 
-             private readonly ICouponService _couponService;
+        private readonly ICouponService _couponService;
 
-             public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice, ICouponService couponService)
+        public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice, ICouponService couponService)
         {
             this._mapper = mapper;
             this._context = context;
             this._productservice = productservice;
             this._couponService = couponService;
         }
+        #endregion
 
 
         //getting all the cart orders
@@ -269,13 +271,13 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
         // deleteing the whole cartorder
         [HttpDelete]
-        [Route("DeletingCartOrder/{ID}")]
-        public async Task<IActionResult> DeletingCartOrder(int ID)
+        [Route("DeletingCartOrder/{Userid}")]
+        public async Task<IActionResult> DeletingCartOrder(string UserID)
         {
             try
             {
                 var response = new ResponsDTO();
-                var cartheaderTobedeleted = await this._context.CartHeaders.FindAsync(ID);
+                var cartheaderTobedeleted = await this._context.CartHeaders.FirstOrDefaultAsync(i=> i.UserID == UserID);
                 if (cartheaderTobedeleted != null)
                 {
                     this._context.CartHeaders.Remove(cartheaderTobedeleted);
