@@ -112,6 +112,12 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 {
                     CartHeader =  this._mapper.Map<CartHeaderDto>(await this._context.CartHeaders.FirstOrDefaultAsync(u => u.UserID == Userid)),
                 };
+                if (cart.CartHeader == null)
+                {
+                    response.Message = "not found";
+                    response.IsSuccess = false;
+                    return response;
+                }
                 cart.CartDetails = this._mapper.Map<List<CartDetailsDto>>(
                     this._context.CartDetails.Where(x => x.CartHeaderID == cart.CartHeader.CartHeaderID).ToList());
                 foreach (var cartCartDetail in cart.CartDetails)
