@@ -24,12 +24,12 @@
         height:100%;
     }
 
-        .left-column img {
-            width: 1000px;
-            height: 750px; 
-            display: block;/* This ensures that any extra space below the image is removed */
-            margin: auto;  /* Centers the image within the column */
-        }
+    .left-column img {
+        width: 1000px;
+        height: 750px; 
+        display: block;/* This ensures that any extra space below the image is removed */
+        margin: auto;  /* Centers the image within the column */
+    }
 
     .right-column {
         width: 35%;
@@ -41,40 +41,45 @@
         height: 100%;
     }
 </style>
-<main class="container">
+<form method="post">
+    <input asp-for="ProductId" hidden/>
+    <main class="container">
 
-    <!-- Left Column / Headphones Image -->
-    <div class="left-column">
-        <img src="@Model.ImageUrl">
+        <!-- Left Column / Headphones Image -->
+        <div class="left-column">
+            <img src="@Model.ImageUrl">
 
-    </div>
-
-
-    <!-- Right Column -->
-    <div class=" right-column " style="height: 100%;">
-
-        <div style="height: 100%; padding: 5px; border: 5px double whitesmoke; border-radius: 3px "  >
-            <!-- Product Description -->
-            <div class="product-description" style="justify-content: center; align-items: center;">
-                <span class="badge bg-warning text-white p-2">@Model.CategoryName</span>
-                <h1 style="justify-content: center">@Model.Name</h1>
-                <p>@Model.Description</p>
-            </div>
-
-            <!-- Product Configuration -->
-            @*         <div class="product-configuration"></div> *@
-
-            <!-- Product Pricing -->
-            <div class="product-price">
-                <span class="text-danger justify-content-center align-content-center"> @Model.Price.ToString("C")</span>
-                <br/>
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary m-1">Back to Home</a>
-                <a class="btn btn-success m-1">Add to cart</a>
-
-            </div>
         </div>
 
-    </div>
 
+        <!-- Right Column -->
+        <div class=" right-column " style="height: 100%;">
 
-</main>
+            <div style="height: 100%; padding: 5px; border: 5px double whitesmoke; border-radius: 3px">
+                <!-- Product Description -->
+                <div class="product-description" style="justify-content: center; align-items: center;">
+                    <span class="badge bg-warning text-white p-2">@Model.CategoryName</span>
+                    <h1 style="justify-content: center">@Model.Name</h1>
+                    <p>@Model.Description</p>
+                </div>
+
+                <!-- Product Configuration -->
+                @*         <div class="product-configuration"></div> *@
+
+                <!-- Product Pricing -->
+                <div class="product-price">
+                    <span class="text-danger justify-content-center"> @Model.Price.ToString("C")</span>
+                    <br/>
+                    <label for="1" style="  margin-bottom: 3px; font-weight: bold">The Amount</label>
+                    <input asp-for="Count" id="1" class="form-control justify-content-center"  type="number" 
+                           style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid white; border-radius: 7px;"/>
+                    <br/>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary m-1">Back to Home</a>
+                    <input type="submit" value="Add To Cart" asp-controller="Home" asp-action="ProductsDetailsToCart" class="btn btn-success m-1">
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</form>

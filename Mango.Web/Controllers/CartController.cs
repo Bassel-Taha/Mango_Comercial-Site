@@ -23,6 +23,10 @@ namespace Mango.Web.Controllers
             return View(await LoadingTheCartBasedOnUser());
         }
 
+        
+
+
+
         private async Task<CartDto> LoadingTheCartBasedOnUser()
         {
             try
@@ -44,5 +48,19 @@ namespace Mango.Web.Controllers
             }
             
         }
+
+
+
+        //private async Task<CartDto> GetUserCart()
+        //{
+        //   var userID = User.Claims.FirstOrDefault(i => i.Type == JwtRegisteredClaimNames.Sub).Value;
+
+        //   var ApiRespons = await this._cartServicce.GetShoppingCartByUseridasync(userID);
+
+        //   var Usercart = JsonConvert.DeserializeObject<CartDto>(ApiRespons.Result.ToString());
+
+        //   return Usercart;
+
+        //}
     }
 }
