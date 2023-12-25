@@ -305,5 +305,34 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         }
 
 
+        [HttpDelete]
+        [Route("DeletingCartDetail/{CartDetailsID}")]
+        public async Task<IActionResult> DeletingCartDetail(int CartDetailsID)
+        {
+            try
+            {
+                var response = new ResponsDTO();
+                var cartDetailToBeRemoved = await _context.CartDetails.FirstOrDefaultAsync(i => i.CartDetailsID == CartDetailsID);
+                if (cartDetailToBeRemoved != null)
+                {
+                    this._context.CartDetails.Remove(cartDetailToBeRemoved);
+                    this._context.SaveChanges();
+                    response.Message = "the cartDetail is deleted successfully";
+                    return this.Ok(response);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "the CartDetail cant be found";
+                    return this.BadRequest(response);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+
     }
 }
