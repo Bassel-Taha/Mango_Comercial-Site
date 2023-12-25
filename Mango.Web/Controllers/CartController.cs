@@ -27,7 +27,7 @@ namespace Mango.Web.Controllers
 
 
 
-        private async Task<CartDto> LoadingTheCartBasedOnUser()
+        private async Task<IActionResult> LoadingTheCartBasedOnUser()
         {
             try
             {
@@ -36,15 +36,15 @@ namespace Mango.Web.Controllers
                 if (respone != null || respone.IsSuccess != false)
                 {
                     var cartdro  = JsonConvert.DeserializeObject<CartDto>(respone.Result.ToString());
-                    return cartdro;
+                    return View(cartdro);
                 }
 
-                return new CartDto();
+                return View(new CartDto());
             }
             catch (Exception e)
             {
                 TempData["error"]=e.Source.ToString();
-                return new CartDto();
+                return RedirectToAction(nameof(HomeController.Index));
             }
             
         }
