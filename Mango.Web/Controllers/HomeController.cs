@@ -97,7 +97,7 @@ namespace Mango.Web.Controllers
                 }
 
                 TempData["success"] = "the products is added succesfully to the Cart";
-                return View(nameof(Index));
+                return this.RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
