@@ -18,16 +18,26 @@ namespace Mango.Web.Controllers
         {
             this._cartServicce = cartServicce;
         }
+
+
+
         public async Task<IActionResult> Index()
         {
-            return View(await LoadingTheCartBasedOnUser());
+            var cartdto = await LoadingTheCartBasedOnUser();
+            if (cartdto != null)
+            {
+                TempData["success"] = "the cart is loaded successfully";
+                return View(cartdto);
+            }
+            TempData["error"]= "UnAuthorized access or server error ";
+            return this.RedirectToAction(nameof(Index), "Home");
         }
 
         
 
 
 
-        private async Task<IActionResult> LoadingTheCartBasedOnUser()
+        private async Task<object> LoadingTheCartBasedOnUser()
         {
             try
             {
@@ -36,15 +46,15 @@ namespace Mango.Web.Controllers
                 if (respone != null || respone.IsSuccess != false)
                 {
                     var cartdro  = JsonConvert.DeserializeObject<CartDto>(respone.Result.ToString());
-                    return View(cartdro);
+                    return cartdro;
                 }
 
-                return View(new CartDto());
+                return new CartDto();
             }
             catch (Exception e)
             {
-                TempData["error"]=e.Source.ToString();
-                return RedirectToAction(nameof(HomeController.Index));
+                
+                return null;
             }
             
         }
