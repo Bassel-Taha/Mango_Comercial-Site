@@ -129,7 +129,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 total = 0;
                 foreach (var cartdetail in cart.CartDetails)
                 {
-                    total = +(cartdetail.Count * cartdetail.Product.Price);
+                    total +=(cartdetail.Count * cartdetail.Product.Price);
                 }
                 cart.CartHeader.CartTotal = total;
 
