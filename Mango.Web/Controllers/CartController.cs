@@ -33,6 +33,22 @@ namespace Mango.Web.Controllers
             return this.RedirectToAction(nameof(Index), "Home");
         }
 
+
+        public async Task<IActionResult> IndexForCoupons(CartDto cart)
+        {
+
+                var responseforcoupon = await _cartServicce.ApplyingCouponasync((CartDto)cart);
+                if (responseforcoupon.IsSuccess == false)
+                {
+                    TempData["error"] = responseforcoupon.Message;
+                }
+                else
+                {
+                TempData["success"] = "the coupon code is added succesfully";
+                }
+                return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> DeleteCartDetailFromCartDto(int cartDetailsID)
         {
            var response = await this._cartServicce.DeletingCartDetail(cartDetailsID);
@@ -46,7 +62,10 @@ namespace Mango.Web.Controllers
            return RedirectToAction(nameof(Index));
         }
 
-        
+
+
+
+
 
 
 
