@@ -70,13 +70,15 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
                         //subtracting the discount if there is a couponCode and the total more than the minimumAmout
                         var coupon = coupons.FirstOrDefault(c => c.CouponCode == cartheader.CouponCode);
-                        if (coupon!=null && total < coupon.MinAmount)
+                        if (coupon!=null && total > coupon.MinAmount)
                         {
                             total-= coupon.DiscountAmount;
+                            cartorder.CartHeader.Discound = coupon.DiscountAmount;
                         }
 
                     }
                     cartorder.CartHeader.CartTotal = total;
+                    
                     cartorder.CartDetails = cartDetailsForCartHeader;
                     allcartorders.Add(cartorder);
                 }
@@ -146,7 +148,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     total -= coupon.DiscountAmount;
                 }
                 cart.CartHeader.CartTotal = total;
-
+                cart.CartHeader.Discound = coupon.DiscountAmount;
                 response.Result = cart;
                 return response;
             }
