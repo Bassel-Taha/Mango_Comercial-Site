@@ -62,15 +62,24 @@
                 <div class="row">
                     <div class="col-6">
                         <span>Coupon:</span>
-                        <input asp-for="CartHeader.CouponCode" type="text" />
+                        @if(Model.CartHeader.CouponCode != null)
+                        {
+                        <input asp-for="CartHeader.CouponCode" disabled />
                         <input asp-for="CartHeader.UserID" hidden />
-                        <button asp-action="IndexForCoupons" type="submit" class="btn btn-sm btn-success"> Apply</button>
-
+                        <button asp-action="IndexForCouponsRemoval" type="submit" class="btn btn-sm btn-danger"> remove </button>
+                        
+                        }
+                        else
+                        {
+                            <input asp-for="CartHeader.CouponCode" type="text" />
+                            <input asp-for="CartHeader.UserID" hidden />
+                            <button asp-action="IndexForCoupons" type="submit" class="btn btn-sm btn-success"> Apply</button>
+                        }
 
                     </div>
                     <div class="col-6 text-end">
-                        <span class="text-danger" style="font-size:21px;">  Order Total : @Model.CartHeader.CartTotal <br /></span>
-                        <span class="text-success"> Order Discount :  @Model.CartHeader.Discound</span>
+                        <span class="text-danger" style="font-size:21px;">  Order Total : @Model.CartHeader.CartTotal $<br /></span>
+                        <span class="text-success"> Order Discount :  @Model.CartHeader.Discound $</span>
                     </div>
                 </div>
             </div>

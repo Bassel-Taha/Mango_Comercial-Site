@@ -49,6 +49,21 @@ namespace Mango.Web.Controllers
                 return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> IndexForCouponsRemoval(CartDto cart)
+        {
+            cart.CartHeader.CouponCode = null;
+            var responseforcoupon = await _cartServicce.ApplyingCouponasync((CartDto)cart);
+            if (responseforcoupon.IsSuccess == false)
+            {
+                TempData["error"] = responseforcoupon.Message;
+            }
+            else
+            {
+                TempData["success"] = "the coupon code is added succesfully";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> DeleteCartDetailFromCartDto(int cartDetailsID)
         {
            var response = await this._cartServicce.DeletingCartDetail(cartDetailsID);
