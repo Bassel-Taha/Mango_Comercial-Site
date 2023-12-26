@@ -12,6 +12,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
     using Microsoft.EntityFrameworkCore;
     using NuGet.Common;
+    using System.Reflection.PortableExecutable;
 
 
     [Route("api/CartAPI")]
@@ -44,7 +45,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                var respons = await this._couponService.GetAllCoupons(token);
+                var respons = await this._couponService.GetAllCoupons();
                 if (respons.IsSuccess == false)
                 {
                     return BadRequest(respons);
@@ -104,6 +105,13 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         [Route("GetCart/{Userid}")]
         public async Task<ResponsDTO> GetCartByUserId(string Userid)
         {
+            var respons = await this._couponService.GetAllCoupons();
+            if (respons.IsSuccess == false)
+            {
+                respons.IsSuccess = false;
+                return respons;
+            }
+            var coupons = (List<Coupon>)respons.Result;
             var response = new ResponsDTO();
             try
             {
@@ -130,6 +138,12 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 foreach (var cartdetail in cart.CartDetails)
                 {
                     total +=(cartdetail.Count * cartdetail.Product.Price);
+                }
+
+                var coupon = coupons.FirstOrDefault(c => c.CouponCode == cart.CartHeader.CouponCode);
+                if (coupon != null && total > coupon.MinAmount)
+                {
+                    total -= coupon.DiscountAmount;
                 }
                 cart.CartHeader.CartTotal = total;
 

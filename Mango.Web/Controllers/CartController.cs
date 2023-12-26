@@ -62,13 +62,6 @@ namespace Mango.Web.Controllers
            return RedirectToAction(nameof(Index));
         }
 
-
-
-
-
-
-
-
         private async Task<object> LoadingTheCartBasedOnUser()
         {
             try

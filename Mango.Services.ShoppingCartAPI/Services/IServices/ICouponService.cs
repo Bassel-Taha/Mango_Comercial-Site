@@ -4,6 +4,6 @@
 
     public interface ICouponService
     {
-        public Task<ResponsDTO> GetAllCoupons(string token);
+        public Task<ResponsDTO> GetAllCoupons();//string token);
     }
 }
