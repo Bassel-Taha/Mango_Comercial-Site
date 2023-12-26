@@ -33,6 +33,19 @@ namespace Mango.Web.Controllers
             return this.RedirectToAction(nameof(Index), "Home");
         }
 
+        public async Task<IActionResult> DeleteCartDetailFromCartDto(int cartDetailsID)
+        {
+           var response = await this._cartServicce.DeletingCartDetail(cartDetailsID);
+           if (response.IsSuccess == false)
+           {
+               TempData["error"] = response.Message;
+               return RedirectToAction(nameof(Index));
+           }
+
+           TempData["success"] = "the item is deleted successfully";
+           return RedirectToAction(nameof(Index));
+        }
+
         
 
 

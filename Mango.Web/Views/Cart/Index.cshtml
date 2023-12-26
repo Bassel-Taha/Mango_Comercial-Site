@@ -50,8 +50,10 @@
                             <span style="font-size: 17px;"> @cartdetail.Count</span>
                         </div>
                         <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
-                            <a class="btn btn-sm btn-danger">
+                            <a asp-route-CartDetailsID="@cartdetail.CartDetailsID" asp-action="DeleteCartDetailFromCartDto" class="btn btn-sm btn-danger p-3">
+                                @* <input asp-controller="Cart" asp-action="DeleteCartDetailFromCartDto" class="btn btn-sm btn-danger" type="submit" /> *@
                                 <i class="bi bi-trash-fill"></i>
+                                
                             </a>
                         </div>
                     </div>
