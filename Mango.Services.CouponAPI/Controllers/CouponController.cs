@@ -13,7 +13,7 @@ namespace Mango.Services.CouponAPI.Controllers
     [Route("api/Coupon")]
     [ApiController]
     //adding the authorize attribute to the controller to make sure that the user must be authenticated to use this api
-    //[Authorize]
+    [Authorize]
     public class CouponController : ControllerBase
     {
         private readonly AppDBContext _dBContext;
