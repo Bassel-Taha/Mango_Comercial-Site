@@ -13,6 +13,7 @@ using Mango.Services.ShoppingCartAPI.Services.IServices;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Mango.Services.ShoppingCartAPI.DelegatingHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,16 +61,24 @@ builder.Services.AddSwaggerGen(c =>
 //adding the services for the api 
 
 #region adding the http client for the products api
+/// gonna use delegattingHandeler to pass the token to the coupons api or any other api 
+
+// adding the HttpContextaccessor to get the token from the cookie
+builder.Services.AddHttpContextAccessor();
+
+//has to add the coupondelegattinghandeller as a transient to the pipeline
+builder.Services.AddTransient<CouponsDelegattingHandler>();
 
 SD.CouponApi = builder.Configuration["CouponsBaseUrl"];
 
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<ICouponService, CouponServices>();
-builder.Services.AddHttpClient("Products",
-    x=> x.BaseAddress = new Uri(builder.Configuration["ProductsBaseUrl"])
-    );
-builder.Services.AddHttpClient("Coupons",
-    x => x.BaseAddress = new Uri(builder.Configuration["CouponsBaseUrl"]));
+builder.Services.AddHttpClient("Products", x => x.BaseAddress = new Uri(builder.Configuration["ProductsBaseUrl"]));
+
+// has to add the httpmessagehandler to the httpclient to pass the token to the api with the class of the delegatting handler
+builder.Services.AddHttpClient("Coupons", x => x.BaseAddress = new Uri(builder.Configuration["CouponsBaseUrl"]))
+    .AddHttpMessageHandler<CouponsDelegattingHandler>();
+
 
 #endregion
 
