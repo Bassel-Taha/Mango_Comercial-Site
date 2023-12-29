@@ -24,7 +24,7 @@
                 string? token = _accessor.HttpContext?.Request.Headers.Authorization.ToString();
                 // has to remove the bearer word from the token as the token is sent with the word bearer
                 token = token.Replace("Bearer ", "");
-                // adding the token to the header of message request that goes to the coupon api
+                // adding the token to the header of message request that goes to the coupon api 
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer" , token );
                 return await base.SendAsync(request, cancellationToken);
             }

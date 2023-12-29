@@ -29,7 +29,7 @@ namespace Mango.Web.Controllers
                 TempData["success"] = "the cart is loaded successfully";
                 return View(cartdto);
             }
-            TempData["error"]= "UnAuthorized access or server error ";
+            TempData["error"]= "the Cart is Emplty please add items to the cart ";
             return this.RedirectToAction(nameof(Index), "Home");
         }
 
