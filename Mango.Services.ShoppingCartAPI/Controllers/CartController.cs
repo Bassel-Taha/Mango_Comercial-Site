@@ -146,9 +146,10 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 if (coupon != null && total > coupon.MinAmount)
                 {
                     total -= coupon.DiscountAmount;
+                    cart.CartHeader.CartTotal = total;
+                    cart.CartHeader.Discound = coupon.DiscountAmount;
                 }
-                cart.CartHeader.CartTotal = total;
-                cart.CartHeader.Discound = coupon.DiscountAmount;
+                
                 response.Result = cart;
                 return response;
             }
