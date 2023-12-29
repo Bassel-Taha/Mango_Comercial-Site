@@ -9,6 +9,7 @@ namespace Mango.Web.Controllers
     using Microsoft.IdentityModel.JsonWebTokens;
 
     using Newtonsoft.Json;
+    using System.Security.Claims;
 
     public class CartController : Controller
     {
@@ -23,13 +24,19 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var cartdto = await LoadingTheCartBasedOnUser();
-            if (cartdto != null)
+            if (User.Claims.FirstOrDefault(i => i.Type == ClaimTypes.Name) != null)
             {
-                TempData["success"] = "the cart is loaded successfully";
-                return View(cartdto);
+                var cartdto = await LoadingTheCartBasedOnUser();
+                if (cartdto != null)
+                {
+                    TempData["success"] = "the cart is loaded successfully";
+                    return View(cartdto);
+                }
+
+                TempData["error"] = "please add items to the your cart ";
+                return this.RedirectToAction(nameof(Index), "Home");
             }
-            TempData["error"]= "the Cart is Emplty please add items to the cart ";
+            TempData["error"] = "UnAuthorized Access, please sign in";
             return this.RedirectToAction(nameof(Index), "Home");
         }
 
