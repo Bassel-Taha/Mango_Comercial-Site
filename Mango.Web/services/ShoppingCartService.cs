@@ -83,5 +83,16 @@
                                                              URL = SD.ShoppingCartBase + $"DeletingCartDetail/{CartDetailsID}"
                                                          });
         }
+
+        public async Task<ResponsDTO> SendingEmail(CartDto Cartorder)
+        {
+            return await this._baseService.SendAsync(
+                new RequestDTO()
+                {
+                    APIType = SD.APIType.POST,
+                    Data = Cartorder,
+                    URL = SD.ShoppingCartBase + "SendingCartEmail"
+                });
+        }
     }
 }

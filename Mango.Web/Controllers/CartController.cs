@@ -106,18 +106,20 @@ namespace Mango.Web.Controllers
             
         }
 
+        public async Task<IActionResult> SendingCartViaEmail(CartDto cart)
+        {
 
+            var responseforcoupon = await _cartServicce.SendingEmail((CartDto)cart);
+            if (responseforcoupon.IsSuccess == false)
+            {
+                TempData["success"] = responseforcoupon.Message;
+            }
+            else
+            {
+                TempData["error"] = "the mail wasnt sent due to error";
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
-        //private async Task<CartDto> GetUserCart()
-        //{
-        //   var userID = User.Claims.FirstOrDefault(i => i.Type == JwtRegisteredClaimNames.Sub).Value;
-
-        //   var ApiRespons = await this._cartServicce.GetShoppingCartByUseridasync(userID);
-
-        //   var Usercart = JsonConvert.DeserializeObject<CartDto>(ApiRespons.Result.ToString());
-
-        //   return Usercart;
-
-        //}
     }
 }

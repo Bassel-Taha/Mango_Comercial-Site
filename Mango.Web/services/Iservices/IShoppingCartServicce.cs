@@ -20,5 +20,7 @@
 
         public Task<ResponsDTO> DeletingCartDetail(int CartDetailsID);
 
+        public Task<ResponsDTO> SendingEmail(CartDto Cartorder);
+
     }
 }
