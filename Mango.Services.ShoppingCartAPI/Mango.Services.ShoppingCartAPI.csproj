@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmailServiceBus\EmailServiceBus.csproj" />
     <ProjectReference Include="..\Mango.Web\Mango.Web.csproj" />
   </ItemGroup>
 

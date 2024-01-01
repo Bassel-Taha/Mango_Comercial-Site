@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EmailServiceBus;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.ShoppingCartAPI.Controllers
@@ -27,13 +28,15 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private readonly IProductsService _productservice;
 
         private readonly ICouponService _couponService;
+        private readonly IMessageServiceBus _serviceBus;
 
-        public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice, ICouponService couponService)
+        public CartController(IMapper mapper, ShoppinCartDB_Context context, IProductsService productservice, ICouponService couponService, IMessageServiceBus serviceBus)
         {
             this._mapper = mapper;
             this._context = context;
             this._productservice = productservice;
             this._couponService = couponService;
+            _serviceBus = serviceBus;
         }
         #endregion
 
@@ -101,7 +104,6 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         }
 
 
-        //////////////need refacturing to calculate the totals after adding the coupon code /////////////
         // getting the cartorder by the userid
         [HttpGet]
         [Route("GetCart/{Userid}")]
@@ -350,6 +352,32 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("SendingCartEmail")]
+        public async Task<ResponsDTO> SendingCartEmail([FromBody] CartDto cartorder)
+        {
+            try
+            {
+                var response = new ResponsDTO();
+                var cartheader =
+                    await this._context.CartHeaders.FirstOrDefaultAsync(x => x.UserID == cartorder.CartHeader.UserID);
+                if (cartheader != null)
+                {
+                    var queuename = "mangoemailsurvicebus";
+                    await _serviceBus.PublishMessage(queuename, cartorder);
+                }
+                response.Message = "the message is sent successfully to the service bus";
+                response.IsSuccess = false;
+                return response;
+            }
+            catch (Exception e)
+            {
+                var response = new ResponsDTO();
+                response.Message = e.Message.ToString();
+                response.IsSuccess = false;
+                return response;
+            }
+        }
 
     }
 }

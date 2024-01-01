@@ -14,6 +14,7 @@ using Mango.Services.ShoppingCartAPI.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Mango.Services.ShoppingCartAPI.DelegatingHandler;
+using EmailServiceBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -126,6 +127,11 @@ builder.Services.AddAuthorization();
 
 #endregion
 
+#region to send the the cart via email using the emailSurviceBus we have to add it to the pipeline and to show here we have to add the message bus project as a depenendency in the cart api project
+
+builder.Services.AddScoped<IMessageServiceBus, MessageServiceBus >();
+
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
