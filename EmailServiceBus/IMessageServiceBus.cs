@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EmailServiceBus
 {
-    internal interface IMessageServiceBus
+    public interface IMessageServiceBus
     {
         Task PublishMessage(string QueueName , object Message);
     }
