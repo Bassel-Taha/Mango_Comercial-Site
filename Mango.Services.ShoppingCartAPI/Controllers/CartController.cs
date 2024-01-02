@@ -360,10 +360,10 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             {
                 var response = new ResponsDTO();
                 response = await GetCartByUserId(cartorder.CartHeader.UserID);
-
+                var cart = (CartDto)response.Result;
+                cart.CartHeader.Email = cartorder.CartHeader.Email;
                 if (response.Result != null)
                 {
-
                     var queuename = "mangoemailsurvicebus";
                     await _serviceBus.PublishMessage(queuename, response.Result);
                 }
