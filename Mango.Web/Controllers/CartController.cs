@@ -108,7 +108,8 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> SendingCartViaEmail(CartDto cart)
         {
-
+            var Email = User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email).Value;
+            cart.CartHeader.Email = Email;
             var responseforcoupon = await _cartServicce.SendingEmail((CartDto)cart);
             if (responseforcoupon.IsSuccess == false)
             {
