@@ -112,13 +112,14 @@ namespace Mango.Web.Controllers
             var responseforcoupon = await _cartServicce.SendingEmail((CartDto)cart);
             if (responseforcoupon.IsSuccess == false)
             {
-                TempData["success"] = responseforcoupon.Message;
+                TempData["error"] = responseforcoupon.Message;
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                TempData["error"] = "the mail wasnt sent due to error";
+                TempData["success"] = "the Email was sent successfully to the service bus";
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
         }
 
     }

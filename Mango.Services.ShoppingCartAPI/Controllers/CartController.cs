@@ -359,19 +359,13 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             try
             {
                 var response = new ResponsDTO();
-                var cartheader =
-                    await this._context.CartHeaders.FirstOrDefaultAsync(x => x.UserID == cartorder.CartHeader.UserID);
-                var cartdetails = _context.CartDetails.Where(i => i.CartHeaderID == cartheader.CartHeaderID).ToList();
-                CartDto fullcart = new CartDto()
-                {
-                    CartHeader = _mapper.Map<CartHeaderDto>(cartheader),
-                    CartDetails = _mapper.Map<List<CartDetailsDto>>(cartdetails)
+                response = await GetCartByUserId(cartorder.CartHeader.UserID);
 
-                }; 
-                if (cartheader != null)
+                if (response.Result != null)
                 {
+
                     var queuename = "mangoemailsurvicebus";
-                    await _serviceBus.PublishMessage(queuename, fullcart);
+                    await _serviceBus.PublishMessage(queuename, response.Result);
                 }
                 response.Message = "the message is sent successfully to the service bus";
                 response.IsSuccess = true;
