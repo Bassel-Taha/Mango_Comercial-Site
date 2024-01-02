@@ -8,6 +8,8 @@
         public static string? AuthAPIBase { get; set; }
         //the base Url for the ProductAPI
         public static string? ProductAPIBase { get; set; }
+        // the base url for the shoppincartAPI
+        public static string? ShoppingCartBase { get; set; }
         // selcet the role of tthe user
         public const string RoleAdmin = "Admin";
         public const string RoleUser = "User";

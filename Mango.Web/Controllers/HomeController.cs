@@ -5,10 +5,14 @@ using System.Diagnostics;
 namespace Mango.Web.Controllers
 {
 	using System.Diagnostics.CodeAnalysis;
+    using System.Security.Claims;
 
-	using Mango.Web.services.Iservices;
+    using Mango.Web.services.Iservices;
 
-	using Newtonsoft.Json;
+    using Microsoft.AspNetCore.SignalR;
+    using Microsoft.IdentityModel.JsonWebTokens;
+
+    using Newtonsoft.Json;
 
 	public class HomeController : Controller
     {
@@ -16,10 +20,13 @@ namespace Mango.Web.Controllers
 
         private readonly IProductsService _productsService;
 
-        public HomeController(ILogger<HomeController> logger , IProductsService productsService)
+        private readonly IShoppingCartServicce _cartServicce;
+
+        public HomeController(ILogger<HomeController> logger , IProductsService productsService, IShoppingCartServicce cartServicce)
         {
 	        _logger = logger;
 	        this._productsService = productsService;
+            this._cartServicce = cartServicce;
         }
 
 
@@ -67,6 +74,39 @@ namespace Mango.Web.Controllers
             }
             
         }
+
+        //adding the product and the count ro the shopping cart using the cartAPi
+        [HttpPost]
+        [ActionName("ProductsDetailsToCart")]
+        public async Task<IActionResult> ProductsDetailsToCart(ProductsDto product)
+        {
+            try
+            {
+                var cartorder = new CartDto();
+                var uesrid = User.Claims.FirstOrDefault(i => i.Type == JwtRegisteredClaimNames.Sub).Value;
+
+                var cartheader = new CartHeaderDto();
+                cartheader.UserID = uesrid;
+                cartorder.CartHeader = cartheader;
+                var cartdeatils = new List<CartDetailsDto> {new CartDetailsDto() { Count = product.Count, ProductID = (int)product.ProductId }};
+                cartorder.CartDetails = cartdeatils;
+                var respons = await this._cartServicce.AddingNewOrUpdatingCartasync(cartorder);
+                if (respons.IsSuccess == false)
+                {
+                    TempData["error"] = respons.Message;
+                }
+
+                TempData["success"] = "the products is added succesfully to the Cart";
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                TempData["error"] = e.Message;
+                return View(nameof(Index));
+            }
+            
+        }
+
 
 	}
 }
