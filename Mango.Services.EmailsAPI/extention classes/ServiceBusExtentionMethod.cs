@@ -17,12 +17,13 @@ namespace Mango.Services.EmailsAPI.extention_classes
 
         private static void OnStop()
         {
-            _serviceBusProcessor.Start();
+            _serviceBusProcessor.Stop();
+
         }
 
         private static void OnStart()
         {
-            _serviceBusProcessor.Stop();
+            _serviceBusProcessor.Start();
         }
     }
 }
