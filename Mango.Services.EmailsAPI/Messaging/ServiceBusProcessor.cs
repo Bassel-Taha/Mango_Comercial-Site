@@ -32,6 +32,8 @@ namespace Mango.Services.EmailsAPI.Messaging
         {
             _Processor.ProcessMessageAsync += OnCartReqeuestRecived;
             _Processor.ProcessErrorAsync += ErrorHandler;
+            //must start the processing or the processor wont work 
+            _Processor.StartProcessingAsync();
         }
 
         
