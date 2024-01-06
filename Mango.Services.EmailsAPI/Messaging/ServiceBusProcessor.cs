@@ -1,12 +1,17 @@
 ﻿using System.Text;
 using Azure.Messaging.ServiceBus;
+using Mango.Services.EmailsAPI.Data;
+using Mango.Services.EmailsAPI.Model;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Mango.Services.EmailsAPI.Messaging
 {
     public class ServiceBusProcessor : IServiceBusProcessor
     {
+        private readonly IServiceScopeFactory _scopeFactory;
+
         public string ConnectionString { get; set; } =
             "Endpoint=sb://mangowebbt.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=YcC2C+YeRZzGLS2SDnqBYyhD/HeykIHLg+ASbEaL6iI="; 
         
@@ -14,8 +19,9 @@ namespace Mango.Services.EmailsAPI.Messaging
         
         public Azure.Messaging.ServiceBus.ServiceBusProcessor? _Processor { get; set; }  
 
-        public ServiceBusProcessor()
+        public ServiceBusProcessor( IServiceScopeFactory scopeFactory)
         {
+            _scopeFactory = scopeFactory;
             var client = new ServiceBusClient(ConnectionString);
              _Processor = client.CreateProcessor(QueueName);
         }
@@ -47,6 +53,17 @@ namespace Mango.Services.EmailsAPI.Messaging
             try
             {
                 //ToDo try to log the email
+                var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<EmailDBContext>();
+                var mail = new EmialDto()
+                {
+                    Email = DeserializedMessage.CartHeader.Email,
+                    ContentMessage = DecodedMessage,
+                    SentTiming = DateTime.Now
+                };
+
+                await context.Emails.AddAsync(mail);
+                await context.SaveChangesAsync();
                 await arg.CompleteMessageAsync(arg.Message);
             }
             catch (Exception e)

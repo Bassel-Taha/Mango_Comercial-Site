@@ -10,6 +10,6 @@ namespace Mango.Services.EmailsAPI.Data
             
         }
 
-        DbSet<EmialDto> Emails { get; set; }
+       public DbSet<EmialDto> Emails { get; set; }
     } 
 }
