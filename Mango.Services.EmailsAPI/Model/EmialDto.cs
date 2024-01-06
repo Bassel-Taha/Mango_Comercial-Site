@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
 namespace Mango.Services.EmailsAPI.Model
@@ -9,6 +10,6 @@ namespace Mango.Services.EmailsAPI.Model
         public string ContentMessage { get; set; }
         public DateTime? SentTiming { get; set; }
         [Key]
-        public string EmailID { get; set; }
+        private string? EmailID { get; set; }
     }
 }
