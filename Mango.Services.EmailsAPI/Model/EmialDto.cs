@@ -9,7 +9,6 @@ namespace Mango.Services.EmailsAPI.Model
         public string  Email { get; set; }
         public string ContentMessage { get; set; }
         public DateTime? SentTiming { get; set; }
-        [Key]
-        private string? EmailID { get; set; }
+        public string? EmailID { get; set; }
     }
 }
