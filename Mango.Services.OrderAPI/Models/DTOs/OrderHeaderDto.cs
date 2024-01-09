@@ -1,12 +1,8 @@
 ﻿
-namespace Mango.Services.OrderAPI.Models
+namespace Mango.Services.OrderAPI.Models.DTOs
 {
-    using System.ComponentModel.DataAnnotations;
-
-    public class OrderHeader
+    public class OrderHeaderDto
     {
-        [Key]
-        public int OrderHeaderID { get; set; }
 
         public string? UserID { get; set; }
 
@@ -32,7 +28,7 @@ namespace Mango.Services.OrderAPI.Models
         public string? PaymentIntentID { get; set; }
         public string? StripeSessionID { get; set; }
 
-        public IEnumerable<OrderDetails>? OrderDeatilas { get; set; }
+        public IEnumerable<OrderDetailsDto>? OrderDeatilas { get; set; }
 
     }
 }

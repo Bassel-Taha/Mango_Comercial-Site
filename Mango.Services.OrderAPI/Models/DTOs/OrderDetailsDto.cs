@@ -1,19 +1,16 @@
 ﻿
-namespace Mango.Services.OrderAPI.Models
+namespace Mango.Services.OrderAPI.Models.DTOs
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    using Mango.Services.OrderAPI.Models.DTOs;
-
-    public class OrderDetails
+    public class OrderDetailsDto
     {
-        [Key]
         public int OrderDetailsID { get; set; }
+        public int OrderHeaderID { get; set; }
 
         public int ProductID { get; set; }
 
-        [NotMapped]
         public ProductsDto? Product { get; set; }
 
         public int Count { get; set; }

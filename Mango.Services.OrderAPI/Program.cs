@@ -1,3 +1,7 @@
+using Mango.Services.OrderAPI.Data;
+
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//adding the dbcontext to the pipeline
+builder.Services.AddDbContext<OrderDBContext>(
+    options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+
 
 var app = builder.Build();
 
