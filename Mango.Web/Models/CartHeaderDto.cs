@@ -16,7 +16,12 @@ namespace Mango.Web.Models
 
         public string? Email { get; set; }
 
-        public int PhoneNumber { get; set; }
+        public int? PhoneNumber { get; set; }
+
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+
 
     }
 }
