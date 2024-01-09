@@ -13,16 +13,16 @@
             <div class="col-7">
                 <div class="row pt-2">
                     <div class="col-12 py-2">
-                        <input placeholder="first name..." class="form-control" />
+                        <input asp-for="CartHeader.FirstName" placeholder="first name..." class="form-control" required />
                     </div>
                     <div class="col-12 py-2">
-                        <input placeholder="last name..." class="form-control" />
+                        <input asp-for="CartHeader.LastName" placeholder="last name..." class="form-control" required />
                     </div>
                     <div class="col-12 py-2">
-                        <input placeholder="email..." class="form-control" />
+                        <input asp-for="CartHeader.Email" placeholder="email..." class="form-control" required />
                     </div>
                     <div class="col-12 py-2">
-                        <input class="form-control" placeholder="phone number..." />
+                        <input asp-for="CartHeader.PhoneNumber" class="form-control" placeholder="phone number..." required />
                     </div>
                     <div class="col-12 pt-2">
                         <label class="col-form-label">Order will be ready in 30minutes after placing order. If you place order when restaurant is closed it will be ready next day.</label>
@@ -33,41 +33,45 @@
             <div class="col-5">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class=" d-none d-lg-block">
-                            <div class="row text-danger">
+                            <div class=" d-none d-lg-block">
+                                <div class="row text-danger">
+                                    <div class="col-6">
+                                        Product Details
+                                    </div>
+                                    <div class="col-3">
+                                        Price
+                                    </div>
+                                    <div class="col-3">
+                                        Count
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        <hr/>
+                        @foreach (var detail in Model.CartDetails)
+                        {
+                            
+                        
+                            <div class="row h-100">
                                 <div class="col-6">
-                                    Product Details
+                                    <span style="font-size:20px">@detail.Product.Name</span>
                                 </div>
 
-                                <div class="col-3">
-                                    Price
+                                <div class="col-3" style="font-size:11px;">
+                                    <span style="font-size:17px;"> @detail.Product.Price</span>
+
                                 </div>
-                                <div class="col-3">
-                                    Count
+                                <div class="col-3" style="font-size:11px;">
+                                    <span style="font-size:17px;"> @detail.Count</span>
                                 </div>
                             </div>
-                        </div>
-                        <hr />
-
-                        <div class="row h-100">
-                            <div class="col-6">
-                                <span style="font-size:20px">Name</span>
-                            </div>
-
-                            <div class="col-3" style="font-size:11px;">
-                                <span style="font-size:17px;"> Price</span>
-
-                            </div>
-                            <div class="col-3" style="font-size:11px;">
-                                <span style="font-size:17px;"> Count</span>
-                            </div>
-                        </div>
-                        <hr />
+                        }
+                        <hr/>
 
                         <div class="row">
                             <div class="col-12 text-center pr-4 text-danger">
-                                Order Total :  $$ <br />
-                                <span class="text-success"> Order Discount :  $$</span>
+                                Order Total : @Model.CartHeader.CartTotal <br/>
+                                <span class="text-success"> Order Discount : @Model.CartHeader.Discound $$</span>
                             </div>
                         </div>
 
@@ -76,7 +80,7 @@
                         <div class="row">
 
                             <div class="col-12 ">
-                                <button type="submit" class="btn btn-success form-control ">
+                                <button asp-action="" type="submit" class="btn btn-success form-control ">
                                     <span>Place Order</span>
                                 </button>
                             </div>
@@ -88,3 +92,8 @@
     </div>
 </form>
 
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial "/>
+}

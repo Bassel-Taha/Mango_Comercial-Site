@@ -42,7 +42,20 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> CheckOut()
         {
-            return View();
+
+            try
+            {
+                var UserCartDto = (CartDto)await LoadingTheCartBasedOnUser();
+                
+
+                return View(UserCartDto);
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = "error retrieving the data from the DB";
+                return RedirectToAction(nameof(Index));
+            }
+            
         }
 
 
