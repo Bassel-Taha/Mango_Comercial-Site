@@ -14,6 +14,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OrderDBContext>(
     options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 
+#region adding the http configurations to get the products from the productAPI
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient("Products", x => x.BaseAddress = new Uri(builder.Configuration["ProductsBaseUrl"]));
+#endregion
 
 var app = builder.Build();
 
