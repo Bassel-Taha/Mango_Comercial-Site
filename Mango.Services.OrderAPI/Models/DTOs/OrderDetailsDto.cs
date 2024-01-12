@@ -7,6 +7,7 @@ namespace Mango.Services.OrderAPI.Models.DTOs
     public class OrderDetailsDto
     {
         public int OrderDetailsID { get; set; }
+
         public int OrderHeaderID { get; set; }
 
         public int ProductID { get; set; }

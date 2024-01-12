@@ -1,4 +1,7 @@
+using Mango.Services.OrderAPI;
 using Mango.Services.OrderAPI.Data;
+using Mango.Services.OrderAPI.Services;
+using Mango.Services.OrderAPI.Services.IServices;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +17,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OrderDBContext>(
     options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 
+#region adding automapper config in the pipeLine
+
+builder.Services.AddAutoMapper(typeof(AutomapperConfig));
+
+#endregion
 #region adding the http configurations to get the products from the productAPI
 
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("Products", x => x.BaseAddress = new Uri(builder.Configuration["ProductsBaseUrl"]));
 #endregion

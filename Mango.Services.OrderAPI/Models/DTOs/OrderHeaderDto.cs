@@ -1,8 +1,11 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace Mango.Services.OrderAPI.Models.DTOs
 {
     public class OrderHeaderDto
     {
+        public int OrderHeaderID { get; set; }
 
         public string? UserID { get; set; }
 
@@ -27,8 +30,6 @@ namespace Mango.Services.OrderAPI.Models.DTOs
         //adding the id for the payment getrway
         public string? PaymentIntentID { get; set; }
         public string? StripeSessionID { get; set; }
-
-        public IEnumerable<OrderDetailsDto>? OrderDeatilas { get; set; }
 
     }
 }

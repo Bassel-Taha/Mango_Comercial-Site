@@ -21,5 +21,7 @@ namespace Mango.Services.OrderAPI.Models
         public string? ProductName { get; set; }
 
         public double ProductPrice { get; set; }
+        [ForeignKey("OrderHeaderID")]
+        public int OrderHeaderID { get; set; }
     }
 }

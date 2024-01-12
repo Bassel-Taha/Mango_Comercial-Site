@@ -2,8 +2,8 @@
 
 namespace Mango.Services.OrderAPI.Services.IServices
 {
-    interface IProductService
+   public interface IProductService
     {
-        public  Task <ProductsDto> GetAllProducts() ;
+        public Task <List<ProductsDto>> GetAllProducts() ;
     }
 }
