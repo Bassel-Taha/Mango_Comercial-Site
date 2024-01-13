@@ -137,5 +137,12 @@ namespace Mango.Services.OrderAPI.Controllers
             }
 
         }
+
+        [HttpPost]
+        [Route("CreatingNewShoppingOrder")]
+        public async Task<ResponsDTO> CreatingShopingOrder(CartDto ImportedCartDto)
+        {
+
+        }
     }
 }

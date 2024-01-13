@@ -13,7 +13,7 @@ namespace Mango.Services.OrderAPI.Models.DTOs
 
         public double Discound { get; set; }
 
-        public double CartTotal { get; set; }
+        public double OrderTotal { get; set; }
 
         public string? Email { get; set; }
 
