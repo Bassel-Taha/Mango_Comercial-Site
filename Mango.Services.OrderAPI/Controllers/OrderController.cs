@@ -12,7 +12,7 @@ namespace Mango.Services.OrderAPI.Controllers
 
     using Microsoft.EntityFrameworkCore;
 
-    [Route("api/Order")]
+    [Route("api/OrderAPI")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -91,58 +91,86 @@ namespace Mango.Services.OrderAPI.Controllers
             }
         }
 
+        #region code written then didnt need it cuz th einstructure had better logic that that that dosnt mean that this logic is incorrect
+
+        //[HttpPost]
+        //[Route("PostNewOrderHeader")]
+        //public async Task<IActionResult> AddingNewOrderHeader(OrderHeaderDto orderheaderDto)
+        //{
+        //    try
+        //    {
+        //        var orderheader = this._mapper.Map<OrderHeader>(orderheaderDto);
+        //        await _context.OrderHeaders.AddAsync(orderheader);
+        //        await this._context.SaveChangesAsync();
+        //        var respone = new ResponsDTO();
+        //        respone.Result = orderheaderDto;
+        //        return Ok(respone);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var respone = new ResponsDTO() { IsSuccess = false, Message = e.Message, };
+        //        return BadRequest(respone);
+        //    }
+
+        //}
+
+        //[HttpPost]
+        //[Route("PostNewOrderDetail")]
+        //public async Task<IActionResult> AddingNewOrderDetail(OrderDetailsDto orderdetailDto)
+        //{
+
+        //    try
+        //    {
+        //        var products = await this._productService.GetAllProducts();
+        //        var orderdetail = this._mapper.Map<OrderDetails>(orderdetailDto);
+        //        var selectedProduct = products.FirstOrDefault(p => p.ProductId == orderdetail.ProductID);
+        //        orderdetail.Product = selectedProduct;
+        //        orderdetail.ProductName = selectedProduct.Name;
+        //        orderdetail.ProductPrice = selectedProduct.Price;
+        //        await _context.OrderDetails.AddAsync(orderdetail);
+        //        await this._context.SaveChangesAsync();
+        //        var response = new ResponsDTO { Result = this._mapper.Map<OrderDetailsDto>(orderdetail) };
+        //        return Ok(response);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var response = new ResponsDTO() { IsSuccess = false, Message = e.Message, };
+        //        return BadRequest(response);
+        //    }
+
+        //}
+
+        #endregion
+
         [HttpPost]
-        [Route("PostNewOrderHeader")]
-        public async Task<IActionResult> AddingNewOrderHeader(OrderHeaderDto orderheaderDto)
+        [Route("CreatingNewShoppingOrder")]
+        public async Task<ResponsDTO> CreatingShopingOrder([FromBody]CartDto ImportedCartDto)
         {
             try
             {
+                var orderheaderDto = this._mapper.Map<OrderHeaderDto>(ImportedCartDto.CartHeader);
                 var orderheader = this._mapper.Map<OrderHeader>(orderheaderDto);
-                await _context.OrderHeaders.AddAsync(orderheader);
-                await this._context.SaveChangesAsync();
+                orderheader.Statues = SD.Status_Pending;
+                orderheader.TimeOfOrder = DateTime.Now;
+                var orderdetailsDtoList = this._mapper.Map<List<OrderDetailsDto>>(ImportedCartDto.CartDetails);
+                var orderdetailslist = this._mapper.Map<List<OrderDetails>>(orderdetailsDtoList);
+                orderheader.OrderDeatilas = orderdetailslist ;
+                var orderheaderentity =  _context.OrderHeaders.Add(orderheader).Entity;
+                await _context.SaveChangesAsync();
+                var orderDto = new OrderDto()
+                                   {
+                                       OrderHeader = this._mapper.Map<OrderHeaderDto>(orderheader),
+                                       OrderDetailsList = this._mapper.Map<List<OrderDetailsDto>>(orderdetailslist)
+                                   };
                 var respone = new ResponsDTO();
-                respone.Result = orderheaderDto;
-                return Ok(respone);
+                respone.Result = orderDto;
+                return respone;
             }
             catch (Exception e)
             {
                 var respone = new ResponsDTO() { IsSuccess = false, Message = e.Message, };
-                return BadRequest(respone);
+                return respone;
             }
-
-        }
-
-        [HttpPost]
-        [Route("PostNewOrderDetail")]
-        public async Task<IActionResult> AddingNewOrderDetail(OrderDetailsDto orderdetailDto)
-        {
-
-            try
-            {
-                var products = await this._productService.GetAllProducts();
-                var orderdetail = this._mapper.Map<OrderDetails>(orderdetailDto);
-                var selectedProduct = products.FirstOrDefault(p => p.ProductId == orderdetail.ProductID);
-                orderdetail.Product = selectedProduct;
-                orderdetail.ProductName = selectedProduct.Name;
-                orderdetail.ProductPrice = selectedProduct.Price;
-                await _context.OrderDetails.AddAsync(orderdetail);
-                await this._context.SaveChangesAsync();
-                var response = new ResponsDTO { Result = this._mapper.Map<OrderDetailsDto>(orderdetail) };
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                var response = new ResponsDTO() { IsSuccess = false, Message = e.Message, };
-                return BadRequest(response);
-            }
-
-        }
-
-        [HttpPost]
-        [Route("CreatingNewShoppingOrder")]
-        public async Task<ResponsDTO> CreatingShopingOrder(CartDto ImportedCartDto)
-        {
-
         }
     }
 }
