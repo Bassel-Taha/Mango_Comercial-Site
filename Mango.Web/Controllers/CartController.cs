@@ -14,10 +14,12 @@ namespace Mango.Web.Controllers
     public class CartController : Controller
     {
         private readonly IShoppingCartServicce _cartServicce;
+        private readonly IOrderService _orderService;
 
-        public CartController(IShoppingCartServicce cartServicce)
+        public CartController(IShoppingCartServicce cartServicce, IOrderService orderService)
         {
             this._cartServicce = cartServicce;
+            _orderService = orderService;
         }
 
 
@@ -56,6 +58,38 @@ namespace Mango.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
+        }
+
+        [HttpPost]
+        [ActionName("Check_Out")]
+        public async Task<IActionResult> CheckOut(CartDto cartDto)
+        {
+            try
+            {
+                var cartfromDb = (CartDto)await LoadingTheCartBasedOnUser();
+                cartfromDb.CartHeader.FirstName = cartDto.CartHeader.FirstName;
+                cartfromDb.CartHeader.LastName = cartDto.CartHeader.LastName;
+                cartfromDb.CartHeader.PhoneNumber = cartDto.CartHeader.PhoneNumber;
+               var orderResponse =  await _orderService.GreatingCartOrder(cartfromDb);
+               if (orderResponse.IsSuccess == true && orderResponse.Result != null)
+               {
+                   var orderDto = JsonConvert.DeserializeObject<OrderDto>(orderResponse.Result.ToString());
+
+                    //TODO  
+                    //getting the stripe session and redirecting to strip to place the order
+                    //TODO
+
+                   return RedirectToAction(nameof(Index));
+               }
+
+               TempData["error"] = "Error With Creating the Order ";
+               return RedirectToAction(nameof(Index));
+            }
+            catch (Exception a)
+            {
+                TempData["error"] = a.Message;
+                return RedirectToAction(nameof(CheckOut));
+            }
         }
 
 
