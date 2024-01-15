@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Web.Controllers
 {
@@ -11,6 +12,7 @@ namespace Mango.Web.Controllers
     using Newtonsoft.Json;
     using System.Security.Claims;
 
+    [Authorize]
     public class CartController : Controller
     {
         private readonly IShoppingCartServicce _cartServicce;
@@ -62,6 +64,7 @@ namespace Mango.Web.Controllers
 
         [HttpPost]
         [ActionName("Check_Out")]
+        [Authorize]
         public async Task<IActionResult> CheckOut(CartDto cartDto)
         {
             try
@@ -92,7 +95,7 @@ namespace Mango.Web.Controllers
             }
         }
 
-
+        [Authorize]
         public async Task<IActionResult> IndexForCoupons(CartDto cart)
         {
 
@@ -153,7 +156,10 @@ namespace Mango.Web.Controllers
             }
         }
 
-
+        public async Task<IActionResult> ConfirmationPage(int orderID)
+        {
+            return View(orderID);
+        }
 
         private async Task<object> LoadingTheCartBasedOnUser()
         {
