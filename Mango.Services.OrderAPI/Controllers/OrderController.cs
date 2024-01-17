@@ -9,8 +9,11 @@ namespace Mango.Services.OrderAPI.Controllers
     using Mango.Services.OrderAPI.Models;
     using Mango.Services.OrderAPI.Models.DTOs;
     using Mango.Services.OrderAPI.Services.IServices;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore;
+
+    using Stripe;
+    using Stripe.Checkout;
 
     [Route("api/OrderAPI")]
     [ApiController]
@@ -170,6 +173,41 @@ namespace Mango.Services.OrderAPI.Controllers
             {
                 var respone = new ResponsDTO() { IsSuccess = false, Message = e.Message, };
                 return respone;
+            }
+        }
+
+        [HttpPost("CreateStripeSession")]
+        [Authorize]
+        public async Task<IActionResult> CreateStripSession([FromBody] StripeSessionDto stripeSessionDto)
+        {
+            try
+            {
+                StripeConfiguration.ApiKey = "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
+
+                var options = new SessionCreateOptions
+                                  {
+                                      SuccessUrl = "https://example.com/success",
+                                      LineItems = new List<SessionLineItemOptions>
+                                                      {
+                                                          new SessionLineItemOptions
+                                                              {
+                                                                  Price = "price_1MotwRLkdIwHu7ixYcPLm5uZ",
+                                                                  Quantity = 2,
+                                                              },
+                                                      },
+                                      Mode = "payment",
+                                  };
+                var service = new SessionService();
+                service.Create(options);
+            }
+            catch (Exception e)
+            {
+                var response = new ResponsDTO()
+                                   {
+                                       IsSuccess = false,
+                                       Message = e.Message
+                                   };
+                return BadRequest(response);
             }
         }
     }
