@@ -31,5 +31,7 @@ namespace Mango.Web.Models
         public string? PaymentIntentID { get; set; }
         public string? StripeSessionID { get; set; }
 
+        public List<OrderDetailsDto>? OrderDeatilas { get; set; }
+
     }
 }

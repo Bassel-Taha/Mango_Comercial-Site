@@ -31,5 +31,8 @@ namespace Mango.Services.OrderAPI.Models.DTOs
         public string? PaymentIntentID { get; set; }
         public string? StripeSessionID { get; set; }
 
+        public List<OrderDetailsDto>? OrderDeatilas { get; set; }
+
+
     }
 }

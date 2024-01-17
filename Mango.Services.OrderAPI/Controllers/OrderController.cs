@@ -182,23 +182,55 @@ namespace Mango.Services.OrderAPI.Controllers
         {
             try
             {
+                // the stripe session secrete key from the stripe account in the site
                 StripeConfiguration.ApiKey = "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
-
+                 //the options and the configuration which the session gonna be created by 
                 var options = new SessionCreateOptions
                                   {
-                                      SuccessUrl = "https://example.com/success",
-                                      LineItems = new List<SessionLineItemOptions>
-                                                      {
-                                                          new SessionLineItemOptions
-                                                              {
-                                                                  Price = "price_1MotwRLkdIwHu7ixYcPLm5uZ",
-                                                                  Quantity = 2,
-                                                              },
-                                                      },
+                                      SuccessUrl = stripeSessionDto.ConfirmationURL,
+                                      CancelUrl = stripeSessionDto.CancelUrl,
+                                      LineItems = new List<SessionLineItemOptions>(),
                                       Mode = "payment",
                                   };
+
+                // for adding the products and the order details and its prices to the stripe session configuration before creating it  
+                foreach (var item in stripeSessionDto.OrderHeaderDto.OrderDeatilas)
+                {
+                    var sessionLineItem = new SessionLineItemOptions()
+                                              {
+                                                  PriceData = new SessionLineItemPriceDataOptions()
+                                                                  {
+                                                                      UnitAmount = (long)(item.ProductPrice * 100),
+                                                                      Currency = "$",
+                                                                      ProductData =
+                                                                          new
+                                                                          SessionLineItemPriceDataProductDataOptions()
+                                                                              {
+                                                                                  Description =
+                                                                                      item.Product.Description,
+                                                                                  Name = item.ProductName,
+                                                                              },
+                                                                  },
+                                                  Quantity = item.Count,
+                                              };
+                    //here adding the sessionLineitem to the creating options of the session 
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                //creating the session and making a local variable from it to get the id and session url for the stripsessiondto
                 var service = new SessionService();
-                service.Create(options);
+                var CreatedSession = service.Create(options);
+
+                //adding the stripe session URL, ID to the stripesessiondto and updating the orderheader in the database
+                stripeSessionDto.StripeSerssionURL = CreatedSession.Url;
+                var OrderheaderfromDB = await this._context.OrderHeaders.FirstOrDefaultAsync(
+                                            i => i.OrderHeaderID == stripeSessionDto.OrderHeaderDto.OrderHeaderID);
+                OrderheaderfromDB.StripeSessionID = CreatedSession.Id;
+                _context.Update(OrderheaderfromDB);
+                await this._context.SaveChangesAsync();
+                var response = new ResponsDTO() { Result = stripeSessionDto };
+                return Ok(response);
+
             }
             catch (Exception e)
             {
