@@ -14,15 +14,25 @@ namespace Mango.Web.services
             _baseService = baseService;
         }
 
-        public Task<ResponsDTO> GreatingCartOrder(CartDto ShoppingCart)
+        public async Task<ResponsDTO> GreatingCartOrder(CartDto ShoppingCart)
         {
-           return _baseService.SendAsync(new RequestDTO()
+           return await _baseService.SendAsync(new RequestDTO()
             {
                 URL = SD.OrderService+"CreatingNewShoppingOrder",
                 Data = ShoppingCart,
                 APIType = SD.APIType.POST,
             });
 
+        }
+
+        public async Task<ResponsDTO> CreateStripeSession(StripeSessionDto StripeSession)
+        {
+            return await this._baseService.SendAsync( new RequestDTO()
+                                              {
+                                                  URL = SD.OrderService + "CreateStripeSession",
+                                                  APIType = SD.APIType.POST,
+                                                  Data = StripeSession
+                                              });
         }
     }
 }

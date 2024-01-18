@@ -18,7 +18,7 @@ namespace Mango.Web.Controllers
         private readonly IShoppingCartServicce _cartServicce;
         private readonly IOrderService _orderService;
 
-        public CartController(IShoppingCartServicce cartServicce, IOrderService orderService)
+        public CartController(IShoppingCartServicce cartServicce, IOrderService orderService )
         {
             this._cartServicce = cartServicce;
             _orderService = orderService;
@@ -80,6 +80,26 @@ namespace Mango.Web.Controllers
 
                     //TODO  
                     //getting the stripe session and redirecting to strip to place the order
+
+                    //configuring a variable for domain of the confirmation URL 
+                    var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+                    var stripeSessionDto = new StripeSessionDto()
+                                               {
+                                                   ConfirmationURL = domain + $"ConfirmationPage{orderDto.OrderHeader.OrderHeaderID}",
+                                                   CancelUrl = domain + $"Cart+CheckOut",
+                                                   OrderHeaderDto =  orderDto.OrderHeader,
+                                               };
+                    var StripeResponse = await this._orderService.CreateStripeSession(stripeSessionDto);
+                    if (StripeResponse.IsSuccess == true)
+                    {
+                        //all we need is the session Url so that our webapp can redirect to stripe checkout page to continue the check out on stripe
+                        var stripesession =
+                            JsonConvert.DeserializeObject<StripeSessionDto>(StripeResponse.Result.ToString());
+                       var stripeSessionURL =  stripesession.StripeSerssionURL;
+                       Response.Headers.Add("Location" , stripeSessionURL);
+                       return new StatusCodeResult(303);
+                    }
+                    
                     //TODO
 
                    return RedirectToAction(nameof(Index));
@@ -156,6 +176,8 @@ namespace Mango.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ConfirmationPage/{orderID}")]
         public async Task<IActionResult> ConfirmationPage(int orderID)
         {
             return View(orderID);

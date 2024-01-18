@@ -201,7 +201,7 @@ namespace Mango.Services.OrderAPI.Controllers
                                                   PriceData = new SessionLineItemPriceDataOptions()
                                                                   {
                                                                       UnitAmount = (long)(item.ProductPrice * 100),
-                                                                      Currency = "$",
+                                                                      Currency = "usd",
                                                                       ProductData =
                                                                           new
                                                                           SessionLineItemPriceDataProductDataOptions()
