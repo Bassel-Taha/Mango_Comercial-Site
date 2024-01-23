@@ -177,10 +177,12 @@ namespace Mango.Web.Controllers
         }
 
         [HttpGet]
-        [Route("ConfirmationPage{orderID}")]
-        public async Task<IActionResult> ConfirmationPage(int orderID)
+        [Route("ConfirmationPage{orderHeaderID}")]
+        public async Task<IActionResult> ConfirmationPage(int orderHeaderID)
         {
-            return View(orderID);
+           var serializedresponse = await _orderService.ValidateStripeSession(orderHeaderID);
+           var result = JsonConvert.DeserializeObject<OrderHeaderDto>(serializedresponse.Result.ToString());
+            return View(orderHeaderID);
         }
 
         private async Task<object> LoadingTheCartBasedOnUser()

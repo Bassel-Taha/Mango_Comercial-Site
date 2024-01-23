@@ -34,5 +34,15 @@ namespace Mango.Web.services
                                                   Data = StripeSession
                                               });
         }
+
+        public async Task<ResponsDTO> ValidateStripeSession(int orderID)
+        {
+            return await this._baseService.SendAsync(new RequestDTO()
+            {
+                URL = SD.OrderService + "ValidateStripeSession",
+                APIType = SD.APIType.POST,
+                Data = orderID
+            });
+        }
     }
 }

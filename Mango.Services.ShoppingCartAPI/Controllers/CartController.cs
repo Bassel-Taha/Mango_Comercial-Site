@@ -1,4 +1,5 @@
 ﻿using EmailServiceBus;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,9 +43,10 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
 
         //getting all the cart orders
-        [HttpPost]
+        [HttpGet]
         [Route("GetAllCartOrders")]
-        public async Task<IActionResult> GetAllCartOrders([FromBody] string token)
+        [Authorize]
+        public async Task<IActionResult> GetAllCartOrders()
         {
             try
             {

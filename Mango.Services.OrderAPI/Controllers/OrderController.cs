@@ -18,6 +18,7 @@ namespace Mango.Services.OrderAPI.Controllers
 
     [Route("api/OrderAPI")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly OrderDBContext _context;
@@ -266,7 +267,7 @@ namespace Mango.Services.OrderAPI.Controllers
 
         [HttpPost("ValidateStripeSession")]
         [Authorize]
-        public async Task<IActionResult> ValidateStripeSession([FromBody] OrderHeaderDto orderHeader)
+        public async Task<IActionResult> ValidateStripeSession([FromBody] int orderHeaderid)
         {
             try
             {
@@ -274,11 +275,11 @@ namespace Mango.Services.OrderAPI.Controllers
                 StripeConfiguration.ApiKey = "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
 
                 var OrderheaderfromDB = await this._context.OrderHeaders.FirstOrDefaultAsync(
-                    i => i.OrderHeaderID == orderHeader.OrderHeaderID);
+                    i => i.OrderHeaderID == orderHeaderid);
 
                 //creating the session and making a local variable from it to get the id and session url for the stripsessiondto
                 var service = new SessionService();
-                var CreatedSession = service.Get(orderHeader.StripeSessionID);
+                var CreatedSession = service.Get(OrderheaderfromDB.StripeSessionID);
                 //getting the payment intent id
                 var paymentIntentIdFromSession = CreatedSession.PaymentIntentId;
                 var paymentIntentServcie = new PaymentIntentService();
