@@ -264,9 +264,11 @@ namespace Mango.Services.OrderAPI.Controllers
                                       {
                                           Name = coupon.CouponCode,
                                           Duration = "repeating", 
-                                          DurationInMonths = 3, 
-                                          AmountOff = (int)coupon.DiscountAmount,
-                                          Currency = "USD"
+                                          DurationInMonths = 3,
+                                          // the amount must be multiplied by 100 to get the true number in stripe
+                                          AmountOff = (long)coupon.DiscountAmount*100,
+                                          Currency = "USD",
+                                          Id = coupon.CouponCode
 
                     };
                     var service = new CouponService();
