@@ -68,9 +68,14 @@ builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 
 #region adding the http configurations to get the products from the productAPI
 
+//adding the delegating handler as a transient in the pipe line so that it can be sent per request 
+builder.Services.AddTransient<MessageDelegatingHandeler>();
+
+builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("Products", x => x.BaseAddress = new Uri(builder.Configuration["ProductsBaseUrl"]));
+builder.Services.AddHttpClient("Coupons", i=> i.BaseAddress = new Uri(builder.Configuration["CouponBaseUrl"])).AddHttpMessageHandler<MessageDelegatingHandeler>();
 #endregion
 
 #region the 3 thing we validate the token with
