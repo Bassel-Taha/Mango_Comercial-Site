@@ -264,6 +264,47 @@ namespace Mango.Services.OrderAPI.Controllers
             }
         }
 
+        [HttpPost("ValidateStripeSession")]
+        [Authorize]
+        public async Task<IActionResult> ValidateStripeSession([FromBody] OrderHeaderDto orderHeader)
+        {
+            try
+            {
+                // the stripe session secrete key from the stripe account in the site
+                StripeConfiguration.ApiKey = "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
+
+                var OrderheaderfromDB = await this._context.OrderHeaders.FirstOrDefaultAsync(
+                    i => i.OrderHeaderID == orderHeader.OrderHeaderID);
+
+                //creating the session and making a local variable from it to get the id and session url for the stripsessiondto
+                var service = new SessionService();
+                var CreatedSession = service.Get(orderHeader.StripeSessionID);
+                //getting the payment intent id
+                var paymentIntentIdFromSession = CreatedSession.PaymentIntentId;
+                var paymentIntentServcie = new PaymentIntentService();
+
+                var paymentConfirmation = paymentIntentServcie.Get(paymentIntentIdFromSession);
+                if (paymentConfirmation.Status == "succeeded")
+                {
+                    OrderheaderfromDB.PaymentIntentID = paymentIntentIdFromSession;
+                    OrderheaderfromDB.Statues = SD.Status_Approved;
+                    await this._context.SaveChangesAsync();
+
+                }
+                var response = new ResponsDTO() { Result = _mapper.Map<OrderHeaderDto>(OrderheaderfromDB) };
+                return Ok(response);
+
+            }
+            catch (Exception e)
+            {
+                var response = new ResponsDTO()
+                {
+                    IsSuccess = false,
+                    Message = e.Message
+                };
+                return BadRequest(response);
+            }
+        }
 
 
         #region using this method when i have coupones in the dp before adding the stripe service to the project or some coupons which added directly to the Db
