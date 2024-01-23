@@ -195,6 +195,7 @@ namespace Mango.Services.OrderAPI.Controllers
                                       CancelUrl = stripeSessionDto.CancelUrl,
                                       LineItems = new List<SessionLineItemOptions>(),
                                       Mode = "payment",
+                                      
                                   };
 
                 // for adding the products and the order details and its prices to the stripe session configuration before creating it  
@@ -219,6 +220,22 @@ namespace Mango.Services.OrderAPI.Controllers
                                               };
                     //here adding the sessionLineitem to the creating options of the session 
                     options.LineItems.Add(sessionLineItem);
+                }
+
+                //adding the discount coupon in the session depending on the coupons
+
+                var couponsForStripeSession = new List<SessionDiscountOptions>()
+                {
+                    new SessionDiscountOptions()
+                    {
+                        Coupon = stripeSessionDto.OrderHeaderDto.CouponCode
+                    }
+                };
+
+                //putting the condition to confirm that the ordertotal is more than the minimum amount of the coupon 
+                if (stripeSessionDto.OrderHeaderDto.Discound > 0 )
+                {
+                    options.Discounts = couponsForStripeSession;
                 }
 
                 //creating the session and making a local variable from it to get the id and session url for the stripsessiondto

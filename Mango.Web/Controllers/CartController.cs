@@ -33,7 +33,7 @@ namespace Mango.Web.Controllers
                 var cartdto = await LoadingTheCartBasedOnUser();
                 if (cartdto != null)
                 {
-                    TempData["success"] = "the cart is loaded successfully";
+                    //TempData["success"] = "the cart is loaded successfully";
                     return View(cartdto);
                 }
 
@@ -96,13 +96,13 @@ namespace Mango.Web.Controllers
                         var stripesession =
                             JsonConvert.DeserializeObject<StripeSessionDto>(StripeResponse.Result.ToString());
                        var stripeSessionURL =  stripesession.StripeSerssionURL;
-                       Response.Headers.Add("Location" , stripeSessionURL);
+                       Response.Headers.Add("Location", stripeSessionURL);
                        return new StatusCodeResult(303);
                     }
-                    
-                    //TODO
 
-                   return RedirectToAction(nameof(Index));
+                    TempData["error"] = "Error With the Stripe session ";
+
+                    return RedirectToAction(nameof(Index));
                }
 
                TempData["error"] = "Error With Creating the Order ";
@@ -141,7 +141,7 @@ namespace Mango.Web.Controllers
             }
             else
             {
-                TempData["success"] = "the coupon code is added succesfully";
+                TempData["success"] = "the coupon code is removed succesfully";
             }
             return RedirectToAction(nameof(Index));
         }
@@ -177,7 +177,7 @@ namespace Mango.Web.Controllers
         }
 
         [HttpGet]
-        [Route("ConfirmationPage/{orderID}")]
+        [Route("ConfirmationPage{orderID}")]
         public async Task<IActionResult> ConfirmationPage(int orderID)
         {
             return View(orderID);
