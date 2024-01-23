@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Mango.Services.CouponAPI.Data;
-using Mango.Services.CouponAPI.Modes;
 using Mango.Services.CouponAPI.Modes.DTO;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,11 @@ using System.Runtime.InteropServices;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
+    using Stripe;
+
+    using Coupon = Mango.Services.CouponAPI.Modes.Coupon;
+    using CouponService = Mango.Web.services.CouponService;
+
     [Route("api/Coupon")]
     [ApiController]
     //adding the authorize attribute to the controller to make sure that the user must be authenticated to use this api
@@ -169,6 +174,11 @@ namespace Mango.Services.CouponAPI.Controllers
                 _dBContext.Coupons.Remove(coupon);
                 await _dBContext.SaveChangesAsync();
                 _response.Message = $"{coupon.CouponCode} was deleted from the DB";
+
+                StripeConfiguration.ApiKey = "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
+                var service = new Stripe.CouponService();
+                service.Delete(coupon.CouponCode);
+
                 return _response;
             }
             catch
