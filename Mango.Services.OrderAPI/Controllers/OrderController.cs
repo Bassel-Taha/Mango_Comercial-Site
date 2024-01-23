@@ -11,6 +11,7 @@ namespace Mango.Services.OrderAPI.Controllers
     using Mango.Services.OrderAPI.Services.IServices;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Diagnostics;
 
     using Stripe;
     using Stripe.Checkout;
@@ -25,11 +26,14 @@ namespace Mango.Services.OrderAPI.Controllers
 
         private readonly IProductService _productService;
 
-        public OrderController(OrderDBContext context, IMapper mapper, IProductService productService)
+        private readonly ICouponService _couponService;
+
+        public OrderController(OrderDBContext context, IMapper mapper, IProductService productService, ICouponService couponService)
         {
             this._context = context;
             this._mapper = mapper;
             this._productService = productService;
+            this._couponService = couponService;
         }
 
         [HttpGet]
@@ -239,6 +243,46 @@ namespace Mango.Services.OrderAPI.Controllers
                                        IsSuccess = false,
                                        Message = e.Message
                                    };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("CreatingCouponInStripe")]
+        [Authorize]
+        public async Task<IActionResult> CreatingCouponInStripe()
+        {
+            try
+            {
+                var couponsList = await this._couponService.GetAllCoupons();
+                foreach (var coupon in couponsList)
+                {
+
+
+                    StripeConfiguration.ApiKey =
+                        "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
+                    var options = new CouponCreateOptions
+                                      {
+                                          Name = coupon.CouponCode,
+                                          Duration = "repeating", 
+                                          DurationInMonths = 3, 
+                                          AmountOff = (int)coupon.DiscountAmount,
+                                          Currency = "USD"
+
+                    };
+                    var service = new CouponService();
+                    service.Create(options);
+                }
+
+                var response = new ResponsDTO()
+                                   {
+                                       Result = couponsList,
+                                       Message = "The Coupones is added successfully to the Stripe project"
+                };
+                return Ok(response);
+            }
+                catch (Exception e)
+            {
+                var response = new ResponsDTO() { IsSuccess = false, Message = e.Message };
                 return BadRequest(response);
             }
         }
