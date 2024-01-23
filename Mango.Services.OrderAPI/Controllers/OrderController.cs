@@ -247,6 +247,9 @@ namespace Mango.Services.OrderAPI.Controllers
             }
         }
 
+
+
+        #region using this method when i have coupones in the dp before adding the stripe service to the project or some coupons which added directly to the Db
         [HttpPost("CreatingCouponInStripe")]
         [Authorize]
         public async Task<IActionResult> CreatingCouponInStripe()
@@ -263,14 +266,14 @@ namespace Mango.Services.OrderAPI.Controllers
                     var options = new CouponCreateOptions
                                       {
                                           Name = coupon.CouponCode,
-                                          Duration = "repeating", 
+                                          Duration = "repeating",
                                           DurationInMonths = 3,
                                           // the amount must be multiplied by 100 to get the true number in stripe
-                                          AmountOff = (long)coupon.DiscountAmount*100,
+                                          AmountOff = (long)coupon.DiscountAmount * 100,
                                           Currency = "USD",
                                           Id = coupon.CouponCode
 
-                    };
+                                      };
                     var service = new CouponService();
                     service.Create(options);
                 }
@@ -279,14 +282,16 @@ namespace Mango.Services.OrderAPI.Controllers
                                    {
                                        Result = couponsList,
                                        Message = "The Coupones is added successfully to the Stripe project"
-                };
+                                   };
                 return Ok(response);
             }
-                catch (Exception e)
+            catch (Exception e)
             {
                 var response = new ResponsDTO() { IsSuccess = false, Message = e.Message };
                 return BadRequest(response);
             }
         }
+        #endregion
+
     }
 }
