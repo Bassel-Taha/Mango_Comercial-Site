@@ -15,14 +15,14 @@
     <form>
         @if (Model != null)
         {
-            <div class="container row">
+            <div class="d-flex row justify-content-evenly">
                 @foreach (var response in Model)
                 {
-                    <div class="col-4 p-3"  >
-                        <div class="p-0 my-3 border rounded" style=" height: 100%">
+                    <div class="col-4 p-3 "  >
+                        <div class="p-0 my-3 border rounded" style=" height : fit-content ">
                             <div class="card" style="height:100%">
                                 <h3 class="card-title text-white-50 text-center py-2">@response.Name</h3>
-                                <img src="@response.ImageUrl" class="card-img-top" style="margin: auto; width: 90%; height: 90%;">
+                                <img src="@response.ImageUrl" class="card-img-top" style="margin: auto; width: 90%;  height: 400px ">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between py-2">
                                         <span class="text-danger" style="font-size: 20px;"> @response.Price.ToString("C")</span>
