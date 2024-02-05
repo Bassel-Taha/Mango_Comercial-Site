@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Mango.Services.CouponAPI.Data;
-using Mango.Services.CouponAPI.Modes;
 using Mango.Services.CouponAPI.Modes.DTO;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,11 @@ using System.Runtime.InteropServices;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
+    using Stripe;
+
+    using Coupon = Mango.Services.CouponAPI.Modes.Coupon;
+    using CouponService = Mango.Web.services.CouponService;
+
     [Route("api/Coupon")]
     [ApiController]
     //adding the authorize attribute to the controller to make sure that the user must be authenticated to use this api
@@ -111,6 +116,27 @@ namespace Mango.Services.CouponAPI.Controllers
                 var coupon = _mapper.Map<Coupon>(couponDTO);
                 await _dBContext.Coupons.AddAsync(coupon);
                 await _dBContext.SaveChangesAsync();
+
+                #region adding the coupon to the stripe project
+
+                StripeConfiguration.ApiKey =
+                    "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
+                var options = new CouponCreateOptions
+                                  {
+                                      Name = coupon.CouponCode,
+                                      Duration = "repeating",
+                                      DurationInMonths = 3,
+                                      // the amount must be multiplied by 100 to get the true number in stripe
+                                      AmountOff = (long)coupon.DiscountAmount * 100,
+                                      Currency = "USD",
+                                      Id = coupon.CouponCode
+
+                                  };
+                var service = new Stripe.CouponService();
+                service.Create(options);
+
+                #endregion
+
                 _response.Result = couponDTO;
                 _response.Message = $"{couponDTO.CouponCode} was added to the DB";
                 return _response;
@@ -169,6 +195,16 @@ namespace Mango.Services.CouponAPI.Controllers
                 _dBContext.Coupons.Remove(coupon);
                 await _dBContext.SaveChangesAsync();
                 _response.Message = $"{coupon.CouponCode} was deleted from the DB";
+
+                #region removing the coupon from the stripe project
+
+                StripeConfiguration.ApiKey = "sk_test_51OYvcND1OtkyKf9kkOt5Asf7D8vIh1ehuxGC9aTVEl6XdMmQDAjr9gGk2hXzcgGG5ht8RPD5KYchOZuSLpTTPyCo00KIjHKutu";
+                var service = new Stripe.CouponService();
+                service.Delete(coupon.CouponCode);
+
+                #endregion
+
+
                 return _response;
             }
             catch

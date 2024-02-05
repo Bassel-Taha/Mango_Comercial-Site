@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-#region the survices must be added before the build of the application
+#region adding the services to the pipeLine of the web project
 
 
 //add the httpclient and the httpclientfactory to the services
@@ -47,13 +47,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITockenProvider, TockenProvider>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IShoppingCartServicce, ShoppingCartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 
-//populate CouponBaseURL in the SD class  with the values from the appsettings.json
+//populate BaseUrls for the services in the SD class  with the values from the app-settings.json
 SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponService"];
 SD.AuthAPIBase = builder.Configuration["ServiceUrls:AuthService"];
 SD.ProductAPIBase = builder.Configuration["ServiceUrls:ProductsService"];
 SD.ShoppingCartBase = builder.Configuration["ServiceUrls:ShoppingCartService"];
+SD.OrderService = builder.Configuration["ServiceUrls:OrderService"];
 
 #endregion
 

@@ -153,6 +153,11 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     cart.CartHeader.CartTotal = total;
                     cart.CartHeader.Discound = coupon.DiscountAmount;
                 }
+                else
+                {
+                    cart.CartHeader.CartTotal = total;
+                    cart.CartHeader.Discound = 0 ; 
+                }
                 
                 response.Result = cart;
                 return response;
