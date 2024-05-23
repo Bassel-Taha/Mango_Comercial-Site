@@ -25,7 +25,7 @@ namespace Mango.Services.ProductsAPI.Data
                 Name = "Sambosa",
                 Price = 15,
                 Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
-                ImageUrl = "https://th.bing.com/th/id/R.4e7f53fcc6f1412363c9aa683dd1426c?rik=1KrgIdIJqrLnhQ&pid=ImgRaw&r=0&sres=1&sresct=1",
+                ImageUrl = "https://th.bing.com/th/id/OIP.C30KE50Fs-PjhCCljL9q3QHaLH?rs=1&pid=ImgDetMain",
                 CategoryName = "Appetizer"
             });
             modelBuilder.Entity<Products>().HasData(new Products
